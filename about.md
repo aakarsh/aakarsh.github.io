@@ -11,10 +11,9 @@ birth. Although so often the object of our contempt and of our private
 fears, it is always in us. It alone can unite humility with boldness
 so as to allow us to penetrate to the heart of things, or allow things
 to enter us and taken possession of us.
-
-> ~Alexander Grothendieck
-
+<p class="message"> ~Alexander Grothendieck</p>
 </p>
+
 
 While I myself cannot claim to possess any special knowledge of any
 topics. I do find this idea of openness and exploration and above all

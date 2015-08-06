@@ -2,7 +2,7 @@
 layout: post
 title: Python Programer's Cheat sheet 
 category:  python
-published: true
+published: false
 ---
 
 This post is part of a series of cheatsheets for to help people get up

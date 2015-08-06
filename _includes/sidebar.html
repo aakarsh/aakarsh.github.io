@@ -5,7 +5,7 @@
 <!-- Toggleable sidebar -->
 <div class="sidebar" id="sidebar">
   <div class="sidebar-item">
-    <img height="80" width="80" src="public/calvin.png" />
+    <img height="80" width="80" src="{{ site.gravatar_url }}" />
     <p>{{ site.description }}</p>
   </div>
 
@@ -26,7 +26,7 @@
     {% endfor %}
 
     <a class="sidebar-nav-item" href="{{ site.github.repo }}">GitHub</a>
-    <a class="sidebar-nav-item" href="{{ site.author.url }}">Twitter</a>
+    <a class="sidebar-nav-item" href="{{ site.author.resume }}">Resume</a>
     <a class="sidebar-nav-item" href="mailto:{{site.author.email}}">Email</a>
   </nav>
 

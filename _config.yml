@@ -15,7 +15,7 @@ rdiscount:
 
 # Setup
 title:               Aakarsh Nair
-tagline:             'Notes and Ramblings'
+tagline:             ''
 description:         'A collection of notes and ramblings collected from a random walk through readings of various sorts.  Made by <a href="https://twitter.com/aakarsh" target="_blank">@aakarsh</a>.'
 url:                 'http://www.aakarshn.com'
 baseurl:             ''
@@ -27,6 +27,7 @@ author:
   url:               https://twitter.com/aakarsh
   email:             aakarsh.nair@gmail.com
   twitter:           aakarsh
+  resume:            res.pdf
 github:
   repo:              'http://github.com/aakarsh'
 
