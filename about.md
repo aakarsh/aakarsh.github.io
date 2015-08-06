@@ -3,28 +3,31 @@ layout: page
 title: About
 ---
 
-<p class="message">
-  Hey there! This page is included as an example. Feel free to customize it for your own use upon downloading. Carry on!
+<p class="message"> In our acquisition of knowledge of the Universe
+(whether mathematical or otherwise) that which renovates the quest is
+nothing more nor less than complete innocence. It is in this state of
+complete innocence that we receive everything from the moment of our
+birth. Although so often the object of our contempt and of our private
+fears, it is always in us. It alone can unite humility with boldness
+so as to allow us to penetrate to the heart of things, or allow things
+to enter us and taken possession of us.
+
+> ~Alexander Grothendieck
+
 </p>
 
-In the novel, *The Strange Case of Dr. Jeykll and Mr. Hyde*, Mr. Poole is Dr. Jekyll's virtuous and loyal butler. Similarly, Poole is an upstanding and effective butler that helps you build Jekyll themes. It's made by [@mdo](https://twitter.com/mdo).
+While I myself cannot claim to possess any special knowledge of any
+topics. I do find this idea of openness and exploration and above all
+innocence to be highly appealing. I hope this place to be where I can
+write down, summarize, synthesize topics as I learn them. Always
+trying to regain or retain a sense of openness that has been mentioned
+previously.
 
-There are currently two themes built on Poole:
+If you are looking for a place where I generally leave my code then
+that can be found at [GitHub](https://github.com/aakarsh).
 
-* [Hyde](http://hyde.getpoole.com)
-* [Lanyon](http://lanyon.getpoole.com)
-
-Learn more and contribute on [GitHub](https://github.com/poole).
-
-## Setup
-
-Some fun facts about the setup of this project include:
-
-* Built for [Jekyll](http://jekyllrb.com)
-* Developed on GitHub and hosted for free on [GitHub Pages](https://pages.github.com)
-* Coded with [Sublime Text 2](http://sublimetext.com), an amazing code editor
-* Designed and developed while listening to music like [Blood Bros Trilogy](https://soundcloud.com/maddecent/sets/blood-bros-series)
-
-Have questions or suggestions? Feel free to [open an issue on GitHub](https://github.com/poole/issues/new) or [ask me on Twitter](https://twitter.com/mdo).
+Have questions or suggestions? [ask me on
+Twitter](https://twitter.com/aakarsh). Or simply leave a comment on
+one of my posts.
 
 Thanks for reading!

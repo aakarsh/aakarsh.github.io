@@ -4,19 +4,31 @@
 permalink:           pretty
 relative_permalinks: true
 
+
+markdown: rdiscount
+pygments: true
+permalink: /posts/:title
+rdiscount:
+  extensions: [smart]
+
+
+
 # Setup
-title:               Lanyon
-tagline:             'A Jekyll theme'
-description:         'A reserved <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that places the utmost gravity on content with a hidden drawer. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
-url:                 http://lanyon.getpoole.com
+title:               Aakarsh Nair
+tagline:             'Notes and Ramblings'
+description:         'A collection of notes and ramblings collected from a random walk through readings of various sorts.  Made by <a href="https://twitter.com/aakarsh" target="_blank">@aakarsh</a>.'
+url:                 'http://www.aakarshn.com'
 baseurl:             ''
 paginate:            5
-
+gravatar_url:        'http://www.gravatar.com/avatar/651ea8be2ad101903021054626f0e1aa.png'
 # About/contact
 author:
-  name:              Mark Otto
-  url:               https://twitter.com/mdo
-  email:             markdotto@gmail.com
+  name:              Aakarsh Nair
+  url:               https://twitter.com/aakarsh
+  email:             aakarsh.nair@gmail.com
+  twitter:           aakarsh
+github:
+  repo:              'http://github.com/aakarsh'
 
 # Custom vars
 version:             1.0.0

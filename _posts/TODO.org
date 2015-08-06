@@ -1,0 +1,42 @@
+
+* Cool Things to Write About:
+
+** Scala Cheat Sheet
+** Python Cheet Sheet
+
+** Approximation Algorithms
+** Red black tree and B-tree implementations
+** Fibonacci Heaps Implementations
+** Hill Climbing and Machine Learning Algorithms in C/C++
+
+** Randomized Algorithms :
+*** Bloom Filters
+*** Quick Sort
+*** Kager Minimum Cut of a Graph
+
+** Android Projects
+*** Port Scanners
+
+** Mathematical Trickeries
+
+*** PCP Theorem
+*** Generating Functions
+
+
+** Computer Architecture
+*** GPU architecture
+*** MESI Protocol
+
+** Scala 
+*** Spark and other "big data" stuffiness
+*** 
+
+** Linux Kernel
+*** Networking Layer
+*** File Systems Layer
+*** Block Drivers and Storage Layer
+
+
+
+
+
