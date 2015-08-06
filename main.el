@@ -1,5 +1,5 @@
 (defvar jekyll-buf-name  "*jekyll*")
-(defvar jekyll-dir "~/src/prv/lanyon/")
+(defvar jekyll-dir "~/src/prv/aakarsh.github.io")
 
 (defun blog/start()
   (interactive)
