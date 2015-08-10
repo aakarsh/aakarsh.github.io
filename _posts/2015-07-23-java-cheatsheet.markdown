@@ -67,8 +67,8 @@ more of a reference rather than any kind of exposition of the ideas.
     * `size`
     * `toArray`
 
-  * `Set<E>` : Collection without dupulicate elements
-  * `SortedSet<E>`: Sorted , Non-Dupulicate
+  * `Set<E>` : Collection without duplicate elements
+  * `SortedSet<E>`: Sorted , Non-Duplicate
   * `List<E>` : Ordered collection
   * `Queue<E>` : Ordering with implied head
     * peek
@@ -85,14 +85,14 @@ more of a reference rather than any kind of exposition of the ideas.
   * `Iterable<E>` 
     * Object providing `Iterator<E>` via `iterator`
 
-* Concrete Implemenations
+* Concrete Implementations
   * `HashSet<E>` : Set implemented as hash table
   * `TreeSet<E>` : `SortedSet` implemented as balanced binary tree
     * Can be slower to search/modify than `HashSet`
     * Keeps elements sorted
-  * `ArrayList<E>` : `List` as resizable array
+  * `ArrayList<E>` : `List` as re-sizable array
     * fast random access
-    * expensive to add/remove at begining
+    * expensive to add/remove at beginning
   * `LinkedList<E>`: `List`,`Queue` as linked list
     * cheap add/remove
     * slow random access
@@ -110,7 +110,7 @@ more of a reference rather than any kind of exposition of the ideas.
   * PriorityQueue<E> not (`Cloneable`)
 
 
-##### Class Heirarchy 
+##### Class Hierarchy 
 
 * `Iterable<E>`
   * `Collection<E>`
@@ -141,7 +141,7 @@ more of a reference rather than any kind of exposition of the ideas.
 * `UnsupportedOperationException` avoid giving full interface implementation
 * `ClassCastException` lookup and addition methods
 * `IllegalArgumentException` 
-* `NoSuchElementException` from empty collectionsx
+* `NoSuchElementException` from empty collections
 * `NullPointerException` if argument passed in is null
 
 
@@ -200,7 +200,41 @@ while(it.hasPrevious()){
 * Used as input to `Collections`  `sort` and `binarySearch`
 * Example `String.CASE_INSENSITIVE_ORDER` comparator
 
-#### The Collection Iterface
+#### The Collection Interface
+
+* Core interface root of many
+  * `public int size()`
+    * limited by `Integer.MAX_VALUE`
+  * `public boolean isEmpty()`
+  * `public boolean contains(Object elem)`
+    * accepts `null` returns true if collection has null
+  * `public Iterator iterator()`
+  * `public Object[] toArray()`
+  * `public <T> T[] toArray(T[] dest)`
+    * if elements fit in `dest` put in dest
+    * else return new array
+    * `ArrayStoreEception` array type incompatible
+  * `public boolean add(E elem)`
+    * return false if addition couldnt succeed due to duplicate
+      restirction
+  * `public void remove(Object elem)`
+
+{% highlight Java %}
+String[] strings = new String[collection.size()];
+strings = collection.toArray(strings);
+
+// using empty arrays
+String[] strings = collection.toArray(new String[0]);
+{% endhighlight %}
+
+* Collection bulk methods
+  * `public boolean containsAll(Collection<?> coll)`
+  * `public boolean addAll(Collection<?> coll)`
+  * `public boolean removeAll(Collection<?> coll)`
+  * `public boolean retainAll(Collection<?> coll)`
+     * remove all but given
+  * `public void clear()`
+    * remove all
 
 #### Set and Sorted Set
 
