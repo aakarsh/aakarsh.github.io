@@ -186,9 +186,19 @@ while(it.hasPrevious()){
 }
 {% endhighlight Java %}
 
-
-
 #### Ordering with Comparable and Comparator
+
+* `java.lang.Comparable<T>` - interface for comparable objects, implemented by object itself
+  * `public int compareTo(T other)` like `this - obj `
+    * `n < 0` `this` is `less` than other
+    * `n == 0` `this` is `equal` to other
+    * `n > 0` `this` is `greater` than other
+  * Defines `total ordering`
+* `java.lang.Comparator<T>` -
+  * `public int compare(T o1, T o2)`
+
+* Used as input to `Collections`  `sort` and `binarySearch`
+* Example `String.CASE_INSENSITIVE_ORDER` comparator
 
 #### The Collection Iterface
 
