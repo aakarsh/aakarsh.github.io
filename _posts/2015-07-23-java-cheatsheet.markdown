@@ -29,30 +29,54 @@ of the better books for clarifying the language's ideas.
 
 #### Collections
 
-* Organized around certain core interfaces.
+* Core Interfaces
 
-* `Collection<E>` : root interface
-  * `add`
-  * `size`
-  * `toArray`
+  * `Collection<E>` : root interface
+    * `add`
+    * `size`
+    * `toArray`
 
-* `Set<E>` : Collection without dupulicate elements
-* `SortedSet<E>`: Sorted , Non-Dupulicate
-* `List<E>` : Ordered collection
-* `Queue<E>` : Ordering with implied head
-  * peek
-  * poll
+  * `Set<E>` : Collection without dupulicate elements
+  * `SortedSet<E>`: Sorted , Non-Dupulicate
+  * `List<E>` : Ordered collection
+  * `Queue<E>` : Ordering with implied head
+    * peek
+    * poll
 
-* `Map<K,V>` : Map key to single value
-* `SortedMap<K,V>` : Map sorted by keys.
-* `Iterator<E>` : 
-  * returned by `Iterable.iterator`
-* `ListIterator<E>` :  
-  * `List` methods
-  * returned by : `List.listIterator`
+  * `Map<K,V>` : Map key to single value
+  * `SortedMap<K,V>` : Map sorted by keys.
+  * `Iterator<E>` : 
+    * returned by `Iterable.iterator`
+  * `ListIterator<E>` :  
+    * `List` methods
+    * returned by : `List.listIterator`
 
-* `Iterable<E>` 
-  * Object providing `Iterator<E>` via `iterator`
+  * `Iterable<E>` 
+    * Object providing `Iterator<E>` via `iterator`
+
+* Concrete Implemenations
+  * `HashSet<E>` : Set implemented as hash table
+  * `TreeSet<E>` : `SortedSet` implemented as balanced binary tree
+    * Can be slower to search/modify than `HashSet`
+    * Keeps elements sorted
+  * `ArrayList<E>` : `List` as resizable array
+    * fast random access
+    * expensive to add/remove at begining
+  * `LinkedList<E>`: `List`,`Queue` as linked list
+    * cheap add/remove
+    * slow random access
+  * `HashMap<K,V>` : hash table implementation of `Map<K,V>`
+    * cheap lookup
+    * cheap insertion
+  * `TreeMap<K,V>` : `SortedMap<K,V>` Implemented as balanced binary tree
+    * moderately quick lookup
+    * ordered data structure
+  * `WeakHashMap<K,V>` : Uses weak references to store objects, referenced objects maybe garbage collectedx
+    * Useful for caching
+
+All are `Cloneable` and `Serializable` :
+  * WeakHashMap<K,V> not (`Cloneable` , `Serializable`)
+  * PriorityQueue<E> not (`Cloneable`)
 
 
 ##### Class Heirarchy 
@@ -81,6 +105,8 @@ of the better books for clarifying the language's ideas.
     * `(C) LinkedHashMap<K,V>`
   * `(C) WeakHashMap<K,V>`
   * `(C) EnumMap<K,V>`
+
+
 
 #### Iteration
 
