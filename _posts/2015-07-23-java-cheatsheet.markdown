@@ -11,17 +11,48 @@ languages means that one is often called upon to be able to translate
 ideas into various concrete languages each with their benefits and
 drawbacks. This sheet has been created using The Java Programming
 Language Book by James Gosling and Ken Arnold. Which seems to be one
-of the better books for clarifying the language's ideas.
+of the better books for clarifying the language's ideas. This post is
+more of a reference rather than any kind of exposition of the ideas.
 
 ### Ch  3: Extending Classes
 
 ### Ch 11: Generic Types
+#### Generic Type Declarations
+#### Working with Generic Types
+#### Generic Methods and Constructors
+#### Wildcard Captures
+#### Type erasure and raw types
+#### Class Extension and Generic Types
 
 ### Ch 12: Exceptions
 
 ### Ch 14: Threads
 
+#### Creating Threads
+#### Using Runnable
+#### Synchronization
+#### `wait`,`notifyAll`, `notify`
+#### Details of waiting and notification
+#### Thread Scheduling
+#### Deadlocks
+#### Ending Thread Execution
+#### Ending Application Execution
+#### The Memory Model
+#### Threads and Exception
+#### ThreadLocal Variables
+#### Debugging Threads
+
 ### Ch 20: I/O Packages
+
+#### Streams Overview
+#### Byte Streams
+#### Character Streams
+#### `InputStreamReader` and `OutputStreamWriter`
+#### Stream Classes
+#### Working with files
+#### Object Serialization
+#### IO Exception Classes
+#### New I/O Classes
 
 ### Ch 21: Collections
 
@@ -74,7 +105,7 @@ of the better books for clarifying the language's ideas.
   * `WeakHashMap<K,V>` : Uses weak references to store objects, referenced objects maybe garbage collectedx
     * Useful for caching
 
-All are `Cloneable` and `Serializable` :
+* All are `Cloneable` and `Serializable` :
   * WeakHashMap<K,V> not (`Cloneable` , `Serializable`)
   * PriorityQueue<E> not (`Cloneable`)
 
@@ -106,9 +137,56 @@ All are `Cloneable` and `Serializable` :
   * `(C) WeakHashMap<K,V>`
   * `(C) EnumMap<K,V>`
 
+##### Exception Conventions
+* `UnsupportedOperationException` avoid giving full interface implementation
+* `ClassCastException` lookup and addition methods
+* `IllegalArgumentException` 
+* `NoSuchElementException` from empty collectionsx
+* `NullPointerException` if argument passed in is null
 
 
 #### Iteration
+
+* Key methods in `Iterator<E>`
+  * `public boolean hasNext()`
+  * `public E next()`
+    * `NoSuchElementException` on empty collections
+  * `public void remove()`
+    * remove element returned by `next` call
+    * `IllegalStateException` remove before `next`
+
+{% highlight Java %}
+while(it.hasNext()) {
+  String str = it.next();
+  if(str.contains("foo")) {
+    it.remove();
+  }
+}
+{% endhighlight %}
+
+* Enhanced for loop cant be used remove during iteration
+* Removing during iteration any other way is unsafe.
+* No snapshot guarantees to prevent multiple deletions
+* `ConcurrentModificationException` detect modification of underlying collection outside current iterator
+
+* `ListIterator<E>` provide `hasPrevious` `previous` in addition to `hasNext` and `next`
+   * Start position provided at creation
+   * `public void remove()` removes last returned value
+   * `public void set(E elem)` replace last returned
+     * `IllegalStateException` if no previous `previous` or `next` call
+   * `public void add(E elem)`
+     * place elem in front of element to be retuned by call to `next()`
+     * call `previous` returns just added 
+
+{% highlight Java %}
+ListIterator<String> it = list.listIterator(list.size());
+while(it.hasPrevious()){
+  String s = it.previous();
+  ...
+}
+{% endhighlight Java %}
+
+
 
 #### Ordering with Comparable and Comparator
 
