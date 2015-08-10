@@ -1,8 +1,8 @@
 ---
 layout: post
-title: Programming Language Reference - Java
+title: Programming Language Reference - Java (draft)
 category:  java
-published: false 
+published: true
 ---
 
 This is a series in which we look and create reference sheets for
@@ -45,6 +45,42 @@ of the better books for clarifying the language's ideas.
 
 * `Map<K,V>` : Map key to single value
 * `SortedMap<K,V>` : Map sorted by keys.
+* `Iterator<E>` : 
+  * returned by `Iterable.iterator`
+* `ListIterator<E>` :  
+  * `List` methods
+  * returned by : `List.listIterator`
+
+* `Iterable<E>` 
+  * Object providing `Iterator<E>` via `iterator`
+
+
+##### Class Heirarchy 
+
+* `Iterable<E>`
+  * `Collection<E>`
+    * `Set<E>`
+      * `SortedSet<E>`
+        * `(C) TreeSet<E>`         
+      * `EnumSet<E>`
+      * `(C) HashSet<E>`
+        * `(C) LinkedHashSet<E>`
+    * `Queue<E>`
+      * `(C)PriorityQueue<E>`
+      * `(C)LinkedList<E>`      
+    * `List<E>`
+      * `LinkedList<E>`
+      * `ArrayList<E>`
+* `Iterator<E>`
+  * `ListIterator<E>`
+
+* `Map<K,V>`
+  * `SortedMap<K,V>`
+    * `(C)TreeMap<K,V>`
+  * `(C) HashMap<K,V>`
+    * `(C) LinkedHashMap<K,V>`
+  * `(C) WeakHashMap<K,V>`
+  * `(C) EnumMap<K,V>`
 
 #### Iteration
 
