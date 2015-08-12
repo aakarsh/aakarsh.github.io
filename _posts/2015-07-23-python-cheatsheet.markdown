@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Programming Language Reference - Java (draft)
+title: Programming Language Reference - Python (draft)
 category:  python
 published: true
 ---
