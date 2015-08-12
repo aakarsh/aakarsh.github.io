@@ -481,21 +481,115 @@ while(it.hasNext())
 
 #### enum Collections
 
+
 * `EnumSet` and `EnumMap` to work better with enums
-* `EnumSet<E extends Enum<E>>` a set of enums of a particular type
-* `public static <E extends Enum<E>> EnumSet<E> allOf(Class<E> enumType)`
-  * set of all enum of this class type
-* `public static <E extends Enum<E>> EnumSet<E> noneOf(Class<E> enumType)`
-  * empty enum set of this class type.
-* `public static <E extends Enum<E>> EnumSet<E> copyOf(EnumSet<E> set)`
-* `public static <E extends Enum<E>> EnumSet<E> complementOf(EnumSet<E> set)`
-* `public static <E extends Enum<E>> EnumSet<E> of(E e1, E e2, E e3)`
-  * set from given Enum
-* 
+* `EnumSet`
+  * `EnumSet<E extends Enum<E>>` a set of enums of a particular type
+  * `public static <E extends Enum<E>> EnumSet<E> allOf(Class<E> enumType)`
+    * set of all enum of this class type
+  * `public static <E extends Enum<E>> EnumSet<E> noneOf(Class<E> enumType)`
+    * empty enum set of this class type.
+  * `public static <E extends Enum<E>> EnumSet<E> copyOf(EnumSet<E> set)`
+  * `public static <E extends Enum<E>> EnumSet<E> complementOf(EnumSet<E> set)`
+  * `public static <E extends Enum<E>> EnumSet<E> of(E e1, E e2, E e3)`
+    * set from given Enum
+  * `EnumSet` uses compact bit vector representation internally
+* `EnumMap`
+  * Use Enum value as keys
+  * `EnumMap<K extends Enum<K>,V>`
+
 
 #### Wrapped Collections and Collection Class
 
+* static utilites for collections
+
+##### Collections class
+
+* Find the min and max using comparator or natural order
+* `public static <T extends Object & Comparable<? super T>> T min(Collection<? extends T> coll)`
+* `public static <T> T min(Collection<? extends T> coll, Comparator<? super T> comp)`
+* `public static <T extends Object & Comparable<? super T>> T max(Collection<? extends T> coll)`
+* `public static <T> T max(Collection<? extends T> coll, Comparator<? super T> comp)`
+
+* `Comparator` building functions
+  * `public static <T> Comparator<T> reverseOrder()`
+     * reverse of natural order of objects it compares
+  * `public static <T> Comparator<T> reverseOrder(Comparator<T> comp)`
+    * a comparator which is reverse of given `comp`
+
+* `public static <T> boolean addAll(Collection<? super T> coll, T... elems)`
+* `public static <T> boolean addAll(Collection<? super T> coll, T... elems)`
+* `public static boolean disjoint(Collection<?> coll1, Collection<?> coll2)`
+
+###### List Methods
+* `public static <T> boolean replaceAll(List<T> list, T oldVal, T newVal)`
+* `public static void reverse(List<?> list)`
+* `public static void rotate(List<?> list, int distance)`
+  * push forward and rotate
+  * v,w,x,y,z  -> z,v,w,x,y (rotate by 1)
+
+* `public static void shuffle(List<?> list)`
+  * randomly shuffle the list
+* `public static void shuffle(List<?> list, Random randomSource)`  
+
+* `public static void swap(List<?> list, int i, int j)`
+* `public static <T> void fill(List<? super T> list, T elem)`
+  * replace each in list with elem
+* `public static <T> void copy(List<? super T> dest, List<? extends T> src)`
+
+* `public static <T> List<T> nCopies(int n, T elem)`
+  * immutable list
+  * store n copies of same object
+  * stored compactly
+  
+* `public static int indexOfSubList(List<?> source, List<?> target)`
+  * like string indexOf
+  * returns first index
+* `public static int lastIndexOfSubList(List<?> source, List<?> target)`
+
+###### Sorting and Searching lists
+
+* `public static <T extends Comparable<? super T>> void sort(List<T> list)`
+* `public static <T> void sort(List<T> list, Comparator<? super T> comp)`
+* `public static <T> int binarySearch(List<? extends Comparable<? super T>> list,T key)`
+  * list must be in sorted natural order
+  * `-safe_insertion_point` when not found if failed at i returns (i+1) as insertion point
+* `public static <T> int binarySearch(List<? extends T> list, T key, Comparator<? superT> comp)`
+
+###### Statistics
+* `public static int frequency(Collection<?> coll, Object elem)`
+
+###### Singleton Collections
+* `public static <T> Set<T> singleton(T elem)`
+  * single element , singleton , immutable set
+* `public static <T> List<T> singletonList(T elem)`
+* `public static <K,V> Map<K,V> singletonMap(K key, V value)`
+
+###### Empty Collections
+* `public static <T> List<T> emptyList()`
+* `public static <T> Set<T> emptySet()`
+* `public static <K,V> Map<K,V> emptyMap()`
+
+###### Unmodifiable Wrappers
+
+* Returns same collection but unmodifiable
+
+* unmodifiableCollection
+* unmodifiableSet
+* unmodifiableSortedSet
+* unmodifiableList
+* unmodifiableMap
+* unmodifiableSortedMap
+
+###### Checked Wrappers
+* Deal with generic type erasure, to ensure collection throws error when adding to it a object of wrong type
+* `public static <E> Collection<E> checkedCollection(Collection<E> coll, Class<E> type)`
+  * `ClassCastException`
+
+
 #### Synchronized Wrappers and Concurrent Collections
+
+* 
 
 #### The Arrays Utility Class
 
