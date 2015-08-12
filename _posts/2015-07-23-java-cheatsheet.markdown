@@ -238,11 +238,161 @@ String[] strings = collection.toArray(new String[0]);
 
 #### Set and Sorted Set
 
-#### List
+* extends Collection Interface
+* marker interface signifying no duplicate elements
+* `add` returns false on second invocation
+* at most one null element
+* `SortedSet<E>` adds methods over `Set<E>`
+  * `public Comparator<? super E> comparator()`
+    Return underlying comparator being used
+  * `public E first()`
+  * `public E last()`
+  * `public SortedSet<E> subSet(E min, E max)`
+    * returns view backed by original
+    * changes in original visible
+  * `public SortedSet<E> headSet(E max)`
+    * all elements less than max
+    * a view
+  * `public SortedSet<E> tailSet(E min)`
+    * all elemetns gt than max
+    * a view
+* All views are backed by original , stay current.
+
+{% highlight Java %}
+public <T> SortedSet<T> copyHead(SortedSet<T> set, T max) {
+    SortedSet<T> head = set.headSet(max);
+    // a new copy from the view
+    return new TreeSet<T>(head); // contents from head
+}
+{% endhighlight %}
+
+
+#### HashSet
+
+* Set implemented with a hashtable
+* Testing containment : O(1) (assuming good hashcode)
+* `public HashSet(int initialCapacity, float loadFactor)`
+  * `initialCapacity` number of hash buckets
+  *  number elements
+  
+* `public HashSet(int initialCapacity)`
+
+* `public HashSet(Collection<? extends E> coll)`
+  * Use default load factor
+  *
+
+#### LinkedHashSet<E>
+
+* perserve element ordering
+
+#### TreeSet<E>
+
+* tree structure which is kept balanced
+* `public TreeSet<E>()`
+   * All elements added to the set must be `Comparable`
+* `public TreeSet<E>(Collection<? extends E> coll)`
+  * Add all elements to the tree set
+* `public TreeSet<E>(Comparator<? extends E> comp)`
+  * instead of natural comparator
+* `public TreeSet(SortedSet<E> set)`
+  * with initial contents
+
+#### `List<E>`
+
+* Extends `Collection<E>`
+* `public int indexOf(Object elem)`
+* `public int lastIndexOf(Object elem)`
+* `public List<E> subList(int min,int max)`
+* `public ListIterator<E> listIterator(int startIndex)`
+* `public ListIterator<E> listIterator()`
+
+#### `ArrayList<E>`
+
+* `O(1)` removal from the end
+* `O(n-i)` addition and removal from the `i^th` position / copy the remainder up
+* `public ArrayList()`
+* `public ArrayList(int initialCapacity)`
+* `public ArrayList(Collection<? extends E> coll)`
+  * initial capacity is 110% of original
+* `public void trimToSize()`
+* `public void ensureCapacity(int minCapacity)`
+  * allow for a certain capacity prevent frequent reallocations
+
+#### `LinkedList`
+
+* Doubly linked list
+* Adding and removing elements in middle is O(1)
+* 
+* `public LinkedList()`
+* `public LinkedList(Collections<? extends E> coll)`
+* `public E getFirst()`
+* `public E getLast()`
+* `public E removeFirst()`
+* `public E removeLast()`
+* `public void addLast(E elem)`
+
+#### RandomAccess List
+
+* marker interface
+* used to indicate fast random or not
+* using explicit for loop will be faster for RandomAccess
+
+{% highlight Java %}
+for(int i = 0; i < list.size();i++) {
+  process(list.get(i));
+}
+{% endhighlight %}
+
+
+{% highlight Java %}
+Iterator it = list.iterator();
+while(it.hasNext())
+  process(list.next());
+{% endhighlight %}
+
 
 #### Queue
 
-#### Map and Sorted Map
+* `Queue<E>` extends `Collection<E>`
+* `public E element()`
+* `public E peek()`
+  * check dont remove
+  * null on empty queue
+* `public E remove()`
+  * remove from `head`
+  * NoSuchElementException on empty queue
+* `public E poll()`
+  * returns and removes from head of the queue
+  * empty queue get null unlike remove
+* `public boolean offer(E elem)`
+  * insert at end
+  * false for queue has finite capacity
+* Shouldnt accept null , null is sentinal for poll
+
+
+#### PriorityQueue
+
+* unbounded queue
+* based on priority heaps
+* head is smallest
+* not sorted in general
+* iterator traverse in heap order ?
+* Insertions : `O(log n)`
+* Searching/Traversing : `O(n)`
+
+* `public PriorityQueue(int capacity)`
+  * new queue with given capacity avoid resizing
+* `public PriorityQueue()`
+* `public PriorityQueue(int capacity, Comparator <? super E> comp)`
+  * use supplied comparator instead
+* `public PriorityQueue(Collection<? extends E> coll)`
+  * new queue that is 110% of this capacity
+  * ClassCastException for non comparable
+* `public PriorityQueue(SortedSet<? extends E> coll)`
+
+
+
+#### Map and Sorted Map 
 
 #### enum Collections
 
