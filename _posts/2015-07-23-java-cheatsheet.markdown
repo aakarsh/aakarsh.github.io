@@ -390,11 +390,108 @@ while(it.hasNext())
   * ClassCastException for non comparable
 * `public PriorityQueue(SortedSet<? extends E> coll)`
 
+#### Map<K,V> and SortedMap 
+
+* `public int size()`
+* `public boolean isEmpty()`
+* `public boolean containsKey(Object key)`
+  * O(1) if good hash
+* `public boolean containsValue(Object value)`
+  * O(n) assuming bad hash
+* `public V get(Object key)`
+* `public V put(K key,V value)`
+  * return original value if key was present
+  * null on no value or null value
+* `public V remove(Object key)`
+  * like put but removes k,v
+* `public V putAll(K key,V value)`
+* `public void clear()`
+  * remove all mappings
+* `public Set<K> keySet()`
+* `public Set<Map,Entry<K,V>> entrySet()`
+  * Entry represents single mapping entry
+  * `Map.Entry` - inner class
+
+* `SortedMap` extension of `Map` interface for keeping entries sorted by keys
+  * `public Comparator<? super K> comparator()`
+  * `public K firstKey()`
+  * `public K lastKey()`
+  * `public SortedMap<K,V> subMap(K minKey, K maxKey)`
+    * a view on map in given interval
+    * `[minKey,maxKey)` only start end included
+  * `public SortedMap<K,V> headMap(K maxKey)`
+  * `public SortedMap<K,V> tailMap(K minKey)`
+* `SortedMap` : `Map`  :: `SortedSet`: `Set`
+
+* `Map` implementers
+  * `HashMap`
+  * `LinkedHashMap`
+  * `IdentityHashMap`
+  * `WeakIdentityHashMap`
+  * `TreeMap`
 
 
-#### Map and Sorted Map 
+#### HashMap
+
+* Adding/Removing key pairs O(1)
+* large number of bucket size means slow iterations , greater memory use
+* small number of buckets means more collision
+* which of these is without evil
+* loadFactor to determine resize time
+* capacity doubled when loadFactor crossed
+* doubling capacity = rehash all entries in the map
+* low loadFactor + low initial capacity = many resizes
+* default loadFactor = .75
+* default capacity = 16
+* resize if (# elements) > (loadFactor * current capacity)
+* `public HashMap(int initialCapacity, float loadFactor)`
+  * number of buckets
+  * 
+
+* `public HashMap(Map<? extends K, ? extends V> map)`
+* `public HashMap()`
+* 
+
+#### LinkedHashMap<K,V>
+
+
+* Defines order of entries by keys
+* default to insertion order
+* iteration of the order of size instead of capacity
+* overhead of linked list maintenance
+* accessOrder - if true then most accessed first
+
+
+#### IdentityHashMap<K,V>
+
+* use object reference equality to do key comparison
+* that is use `==` instead of `equals` for key comparison
+
+#### WeakHashMap<K,V>
+* Refer to keys using `WeakReference` object
+* Let object get garbage collected,references dont force object to stay in memory
+* if key garbage collected automatically removed from WeakHashMap
+* iterators can return no such element after hasNext = true
+* good for caches
+
+#### TreeMap<K,V>
+
+* A map sorted by keys
+* `public TreeMap(Comparator<? super K> comp)`
 
 #### enum Collections
+
+* `EnumSet` and `EnumMap` to work better with enums
+* `EnumSet<E extends Enum<E>>` a set of enums of a particular type
+* `public static <E extends Enum<E>> EnumSet<E> allOf(Class<E> enumType)`
+  * set of all enum of this class type
+* `public static <E extends Enum<E>> EnumSet<E> noneOf(Class<E> enumType)`
+  * empty enum set of this class type.
+* `public static <E extends Enum<E>> EnumSet<E> copyOf(EnumSet<E> set)`
+* `public static <E extends Enum<E>> EnumSet<E> complementOf(EnumSet<E> set)`
+* `public static <E extends Enum<E>> EnumSet<E> of(E e1, E e2, E e3)`
+  * set from given Enum
+* 
 
 #### Wrapped Collections and Collection Class
 
