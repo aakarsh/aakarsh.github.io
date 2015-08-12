@@ -589,7 +589,37 @@ while(it.hasNext())
 
 #### Synchronized Wrappers and Concurrent Collections
 
-* 
+* Add synchronization to unsynchronized collections
+* recommendation to drop reference to unsynchronized map
+* uses the unsync map as the backing store
+* iterators returned by sync wrappers are not synchronized
+
+#### Concurrent Collections
+
+* Specifically Defined for concurrency
+* `BlockingQueue<E>` Interface
+  * capacity constrained collection
+  * wait until space appears in collection
+  * `public void put(E elem) throws InterruptedException`
+    * wait for space
+  * `public boolean offer(E elem, long time, TimeUnit unit) throws InterruptedException`
+    * wait for space
+    * false if timeunit expired but still couldnt add
+  * `public E take() throws InterruptedException`
+    * take , wait if none
+  * `public E poll(long time, TimeUnit unit) throws InterruptedException`
+    * take wait or expire
+    * `null` if time elapsed
+  * * `drainTo` - to allow bulk transfer to a collection, may be more efficient in some concrete implementations
+
+* `InterruptedException` - support for cancellation of thread
+
+* `ArrayBlockingQueue<E>` 
+  * backed by array
+* `LinkedBlockingQueue<E>`
+  * Linked List based
+  * greather throughput allow independent locking of head and tail
+  * 
 
 #### The Arrays Utility Class
 

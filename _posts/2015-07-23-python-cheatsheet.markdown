@@ -1,8 +1,8 @@
 ---
 layout: post
-title: Python Programer's Cheat sheet 
+title: Programming Language Reference - Java (draft)
 category:  python
-published: false
+published: true
 ---
 
 This post is part of a series of cheatsheets for to help people get up
