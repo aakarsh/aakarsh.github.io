@@ -1,7 +1,7 @@
 ---
 layout: post
 title: A simple reference for common linux system monitoring commands (draft)
-category:  linux, monitoring
+category:  linux
 published: true
 ---
 
