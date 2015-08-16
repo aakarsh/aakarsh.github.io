@@ -95,8 +95,48 @@ zram0      0      0       0       0      0      0       0       0      0      0
 zram1      0      0       0       0      0      0       0       0      0      0
 {% endhighlight %}
 
+* Field discription for disk mode
+  * Reads :
+    * total: Total reads completed successfully
+    * merged: grouped writes (resulting in one I/O)
+    * sectors: Sectors written successfully    
+  * IO
+    * cur: I/O in progress
+    * s: seconds spent for I/O
+
+# `df`
+
+* `df [OPTION]... [FILE]...`
+* Display amount of diskspace available on file system containing file name argument 
+* If no file name then display all mounted file systems
+* `-h` dispalys human readable sizes
+* Example usage :
 
 
+{% highlight bash %}
+$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda5        94G   88G  435M 100% /
+none            4.0K     0  4.0K   0% /sys/fs/cgroup
+udev            393M  4.0K  393M   1% /dev
+tmpfs           100M  1.2M   99M   2% /run
+none            5.0M     0  5.0M   0% /run/lock
+none            496M  868K  495M   1% /run/shm
+none            100M   16K  100M   1% /run/user
+{% endhighlight %}
+
+{% highlight bash %}
+$ df . -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda5        94G   88G  434M 100% /
+{% endhighlight %}
+
+
+
+
+
+
+  
 ### Summary
 
 
