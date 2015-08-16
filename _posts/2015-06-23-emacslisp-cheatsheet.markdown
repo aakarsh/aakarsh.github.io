@@ -37,7 +37,7 @@ installation of emacs. See `(info "elisp")`
 * Start with `#<`
 * Example
 
-{% highlight lisp %}
+{% highlight EmacsLisp %}
 (current-buffer)
   => #<buffer objects.texi>
 {% endhighlight %}
@@ -52,9 +52,18 @@ installation of emacs. See `(info "elisp")`
 ##### Programmer Types
 
 ###### Integer Types
+* `-536870912` to `536870911` or `2^29` to `2^29 -1`
+* read syntax
+  * optional sign
+  * optinoal period at end
+* For too large read as floating point number
+
 ###### Floating Point Type
+
 ###### Character Type
 ###### Symbol Type
+* 
+
 ###### Sequence Type
 ###### Cons Cell Type
 ###### Array Type
