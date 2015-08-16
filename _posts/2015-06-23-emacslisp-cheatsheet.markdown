@@ -62,7 +62,7 @@ installation of emacs. See `(info "elisp")`
 
 ###### Character Type
 ###### Symbol Type
-* 
+* `:` denotes key workd symbol
 
 ###### Sequence Type
 ###### Cons Cell Type
@@ -158,6 +158,92 @@ installation of emacs. See `(info "elisp")`
 #### Symbols
 #### Evaluation
 #### Control Structures
+
+##### Sequencing
+* Evaluation in textual order.
+* Special form `progn`
+
+{% highlight lisp %}
+(progn A B C ...)
+{% endhighlight %}
+
+* execute A , B, C in order
+* body of Function defines implicity `progn`
+* implicit in may control structures
+
+{% highlight lisp %}
+    (progn (print "The first form")
+           (print "The second form")
+           (print "The third form"))
+         -| "The first form"
+         -| "The second form"
+         -| "The third form"
+    => "The third form"
+{% endhighlight %}
+
+* `progn` : evaluates all forms returns value of final form
+* `prog1` : This special form evaluates FORM1 and all of the FORMS, in textual order, returning the result of FORM1.
+* `prog2` : This special form evaluates FORM1, FORM2, and all of the
+  following FORMS, in textual order, returning the result of FORM2.
+
+###### Conditionals
+* `if`, `cond`, `when`, `unless`
+* if condition then-form else-forms...
+  * chooses between `then-form` and `else-forms` based on conditionals
+  * else has implicit `progn`
+  * unexecuted branches are not executed
+  
+{% highlight lisp %}
+  (if nil
+     (print 'true)
+   'very-false)
+{% endhighlight %}
+
+* when condition then-forms...
+  * variant of `if` without `else-forms`
+  * implicit progn for `then-forms`
+
+{% highlight lisp %}
+(when CONDITION A B C)
+;; equivalent to
+(if CONDITION (progn A B C) nil)
+{% endhighlight %}
+
+* `unless condition forms...`
+  * This is a variant of `if' where there is no THEN-FORM:
+
+{% highlight lisp %}
+(unless CONDITION A B C)
+;; equivalent to
+(if CONDITION nil
+   A B C)
+{% endhighlight %}
+
+* `cond clause...`
+  * `cond` chooses among an arbitrary number of alternatives.
+  *  Each CLAUSE in the `cond` must be a list
+  * The `CAR` of this list is the `CONDITION`
+  * If the value of CONDITION is non-`nil`,
+    * the clause "succeeds"; then `cond` evaluates its `BODY-FORMS`, 
+    * the value of the last of `BODY-FORMS` becomes the value of the `cond`
+
+{% highlight lisp %}
+  (cond ((numberp x) x)
+        ((stringp x) x)
+        ((bufferp x)
+         (setq temporary-hack x) ; multiple body-forms
+         (buffer-name x))        ; in one clause
+        ((symbolp x) (symbol-value x)))
+{% endhighlight %}
+
+* 
+###### Combining Conditions
+* and', `or', `not'.
+###### Iteration
+* while' loops.
+###### Nonlocal Exits
+* Jumping out of a sequence.
+
 #### Variables
 #### Functions
 #### Macros
