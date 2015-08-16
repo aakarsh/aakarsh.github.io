@@ -236,7 +236,8 @@ installation of emacs. See `(info "elisp")`
         ((symbolp x) (symbol-value x)))
 {% endhighlight %}
 
-* 
+*
+
 ###### Combining Conditions
 * and', `or', `not'.
 ###### Iteration
