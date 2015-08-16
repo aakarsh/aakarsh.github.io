@@ -163,7 +163,7 @@ installation of emacs. See `(info "elisp")`
 * Evaluation in textual order.
 * Special form `progn`
 
-{% highlight lisp %}
+{% highlight emacs-lisp %}
 (progn A B C ...)
 {% endhighlight %}
 
@@ -171,7 +171,7 @@ installation of emacs. See `(info "elisp")`
 * body of Function defines implicity `progn`
 * implicit in may control structures
 
-{% highlight lisp %}
+{% highlight emacs-lisp %}
     (progn (print "The first form")
            (print "The second form")
            (print "The third form"))
@@ -193,7 +193,7 @@ installation of emacs. See `(info "elisp")`
   * else has implicit `progn`
   * unexecuted branches are not executed
   
-{% highlight lisp %}
+{% highlight emacs-lisp %}
   (if nil
      (print 'true)
    'very-false)
@@ -203,7 +203,7 @@ installation of emacs. See `(info "elisp")`
   * variant of `if` without `else-forms`
   * implicit progn for `then-forms`
 
-{% highlight lisp %}
+{% highlight emacs-lisp %}
 (when CONDITION A B C)
 ;; equivalent to
 (if CONDITION (progn A B C) nil)
@@ -212,7 +212,7 @@ installation of emacs. See `(info "elisp")`
 * `unless condition forms...`
   * This is a variant of `if' where there is no THEN-FORM:
 
-{% highlight lisp %}
+{% highlight emacs-lisp %}
 (unless CONDITION A B C)
 ;; equivalent to
 (if CONDITION nil
@@ -227,7 +227,7 @@ installation of emacs. See `(info "elisp")`
     * the clause "succeeds"; then `cond` evaluates its `BODY-FORMS`, 
     * the value of the last of `BODY-FORMS` becomes the value of the `cond`
 
-{% highlight lisp %}
+{% highlight emacs-lisp %}
   (cond ((numberp x) x)
         ((stringp x) x)
         ((bufferp x)
