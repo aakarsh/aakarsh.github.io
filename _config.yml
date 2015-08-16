@@ -6,7 +6,7 @@ relative_permalinks: true
 
 
 markdown: rdiscount
-pygments: true
+highlighter: true
 permalink: /posts/:title
 rdiscount:
   extensions: [smart]
