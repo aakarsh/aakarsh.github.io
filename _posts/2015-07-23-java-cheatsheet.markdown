@@ -14,7 +14,7 @@ Language Book by James Gosling and Ken Arnold. Which seems to be one
 of the better books for clarifying the language's ideas. This post is
 more of a reference rather than any kind of exposition of the ideas.
 
-### Ch  3: Extending Classes
+### Ch 3: Extending Classes
 
 ### Ch 11: Generic Types
 #### Generic Type Declarations
@@ -444,6 +444,7 @@ while(it.hasNext())
 * default loadFactor = .75
 * default capacity = 16
 * resize if (# elements) > (loadFactor * current capacity)
+
 * `public HashMap(int initialCapacity, float loadFactor)`
   * number of buckets
   * 
@@ -619,16 +620,58 @@ while(it.hasNext())
 * `LinkedBlockingQueue<E>`
   * Linked List based
   * greather throughput allow independent locking of head and tail
-  * 
+  * put goes to end and take takes from head so indpendent locking helpful
+  * requiring allocation for each insertion produces more garbage
+* `PriorityBlockingQueue`
+* `SynchronousQueue`
+  * each `take` wait for a `put` and vice versa
+* `DelayQueue`
+  * elements must expire a delay before they can be taken
+  * `getdelay` to see what it is
+
+###### ConcurrentHashMap
+* fully concurrent retrieval
+* fixed num concurrent insertions
+* all operations are thread safe
+* no locking involved !!
+* `public V putIfAbsent(K key, V value)`
+  * atomic store if key doesnt exist
+  * null returned if exits
+* `public boolean remove(Object key, Object value)`
+  * remove if `key` mapping to `value` is present
+  * no other remove method
+* `public boolean replace(K key, V oldValue, V newValue)`
+  * replace key old value with new value
+
+###### ConcurrentLinkedQueue<E>
+* lockless,highly concurrent
+* linked list
+* weakly consistent iterator
+
+###### CopyOnWriteArrayList<E>
+* make a copy only if original ArrayList is modified
+* efficient for many readers few writers
+* iterator always sees same snapshot
 
 #### The Arrays Utility Class
 
+* Useful static methods for dealing with Arrays
+* sort : sort in ascending /increasing order : O(nlog(n))
+* binarySearch: key index, or negative value safe insertion point
+* fill: Fills array with a specified value
+* equals , deepEquals : true if two arrays are equal, deepEquals check for equality by iterating nested arrays
+* hashCode, deepHashCode : compute the hashCode for an array
+
 #### Writing Iterator Implementations
+
+* 
+
 
 #### The Legacy Collection Types
 
-#### Properties
 
+
+#### Properties
 
 
 
