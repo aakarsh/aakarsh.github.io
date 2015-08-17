@@ -583,7 +583,6 @@ error--> Symbol's value as variable is void: x
     * symbol given value result of form
     * does not evaluate symbol
     * argument gets automatically quoted
-
 {% highlight emacs-lisp %}
 (setq x (1+ 2))
      => 3
@@ -596,7 +595,37 @@ x                   ; The global value is unchanged.
      => 3
 {% endhighlight %}
 
+* `set symbol value`
+  * puts `VALUE` in the value cell of `symbol`
+  * symbol is evaluated to obtain the symbol to set
+  * when dynamic binding is in effect same as `setq`
+  * when variable is lexically bound `set` affects `dynamic value`
+  * `setq` affects the current `lexical value`
+  
+{% highlight emacs-lisp %}
+(set one 1)
+error--> Symbol's value as variable is void: one
+(set 'one 1)
+     => 1
+(set 'two 'one)
+     => one
+(set two 2)         ; `two' evaluates to symbol `one'.
+     => 2
+one                 ; So it is `one' that was set.
+     => 2
+(let ((one 1))      ; This binding of `one' is set,
+  (set 'one 3)      ;   not the global value.
+  one)
+     => 3
+one
+     => 2
+{% endhighlight %}
 
+
+* Scoping Rules for Variable Bindings
+  * 
+  * 
+  
 * Buffer Local Variables
 
 * File Local Variables
