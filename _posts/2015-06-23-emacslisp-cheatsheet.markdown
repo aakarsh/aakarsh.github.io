@@ -321,7 +321,38 @@ installation of emacs. See `(info "elisp")`
 
 
 ###### Nonlocal Exits
-* Jumping out of a sequence.
+* Transfer control from one point to another
+* Unbind all variable bindings made by exited constructs
+
+####### Catch and Throw
+* Allow nonlocal exit on request
+{% highlight emacs-lisp %}
+(defun foo-outer ()
+  (catch 'foo
+    (foo-inner)))
+
+(defun foo-inner ()
+  ...
+  (if x
+      (throw 'foo t))
+  ...)
+{% endhighlight %}
+
+* throw when executed tranfers to corresponding catch
+* second argument of throw is return value of `catch`
+* first argument used to find matching catch `eq` comparision
+* innermost matching catch takes precedence
+* If binding constructs like `let` exited then variables get unbund
+* `throw` restores buffers and position saved by `save-restriction`
+* `throw` restores window selection saved by `save-window-excursion`
+* `lexical` nesting unnecessary only needs to be chronologically after `catch`
+* `emacs-lisp` uses only `throw` for non-local exits
+
+
+
+####### Examples of Catch
+####### Errors
+####### Cleanups
 
 #### Variables
 #### Functions
