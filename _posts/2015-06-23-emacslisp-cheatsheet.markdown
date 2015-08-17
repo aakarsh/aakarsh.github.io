@@ -512,10 +512,64 @@ error--> Symbol's value as variable is void: x
 
   
 * Defining Variables
+  * `defconst` , `defvar` - signal intent of varable usage
+  * `defconst` used for signaling but emacs allows you to change value defined as const
+  * `defconst` unconditionally initializes a variable
+  * `defvar`   initializes only if variable is originally void
+  * `defcustom` defines a customizable variable (uses `defvar` internally)
+  
+  * `defvar symbol [value [doc-string]]`
+    * defines `symbol` as a variable
+    * `symbol` is not evaluated
+    * variable marked as special always `dynamically bound`
+    * if `symbol` already has a value then the `value` is not even evaluated
+    * if `symbol` has buffer local value then `defvar` acts on buffer-independent value
+    * not current `(buffer-local)` binding
+    * `C-M-x`  `eval-defun` force setting variable unconditionally without testing
+    
+    {% highlight emacs-lisp %}
+    (defvar bar 23
+            "The normal weight of a bar.")
+               => bar
+    {% endhighlight %}
 
+  * `defconst symbol value [doc-string]`
+    * defines symbol and initializes it
+    * establishes global value for the symbol
+    * marked as `special` always dynamically bound
+    * marks the variable as `risky`
+    * sets the buffer independent value
+    
 * Tips for Defining
+  * Some naming conventions as follows (defined by suffix) :
+    * `-function` : defines functions
+    * `-functions` : The value is a list of functions
+    * `-hook` : variable is a hook
+    * `-form` : The value is a form
+    * `-forms`: The value is a list of forms
+    * `-predicate` : The value is a predicate boolean expression
+    * `-flag` : value significant only if not nil
+    * `-program` : The value is a program name
+    * `-command` : the value is a shell command
+    * `-switches`: value is a list of command switches
+
+
+  * For complicated initializations put it all in a `defvar`
+{% highlight emacs-lisp %}
+(defvar my-mode-map
+       (let ((map (make-sparse-keymap)))
+         (define-key map "\C-c\C-a" 'my-command)
+         ...
+         map)
+       DOCSTRING)
+{% endhighlight %}
+  * file reloading will initialize it the first time but not second time unless `C-M-x` is used
+
+
 
 * Accessing Variables
+
+
 
 * Setting Variables
 
