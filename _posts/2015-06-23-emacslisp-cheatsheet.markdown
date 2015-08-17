@@ -188,7 +188,7 @@ installation of emacs. See `(info "elisp")`
 
 ###### Conditionals
 * `if`, `cond`, `when`, `unless`
-* if condition then-form else-forms...
+* `if condition then-form else-forms...`
   * chooses between `then-form` and `else-forms` based on conditionals
   * else has implicit `progn`
   * unexecuted branches are not executed
@@ -199,7 +199,7 @@ installation of emacs. See `(info "elisp")`
    'very-false)
 {% endhighlight %}
 
-* when condition then-forms...
+* `when condition then-forms...`
   * variant of `if` without `else-forms`
   * implicit progn for `then-forms`
 
@@ -236,12 +236,90 @@ installation of emacs. See `(info "elisp")`
         ((symbolp x) (symbol-value x)))
 {% endhighlight %}
 
-*
+* Use `t` for default clause which always passes.
+
+{% highlight emacs-lisp %}
+  (setq a 5)
+    (cond ((eq a 'hack) 'foo)
+          (t "default"))
+  => "default"
+{% endhighlight %}
+
 
 ###### Combining Conditions
-* and', `or', `not'.
+* `and`, `or`, `not`.
+####### `not condition`
+* return `t` if condition is `nil` and `nil` otherwise
+####### `and conditions...`
+* ensures each condition is `t`
+* short-circuits if any condition is `nil`
+{% highlight emacs-lisp %}
+(and (print 1) (print 2) nil (print 3))
+     -| 1
+     -| 2
+=> nil
+
+;; another example
+(if (and (consp foo) (eq (car foo) 'x))
+    (message "foo is a list starting with x"))
+{% endhighlight %}
+
+####### `or conditions...`
+
+* Requires at least one of the conditions to be true
+* short cirquits on first non-`nil` condition
+* value returned is first non-`nil`
+* else returns nil
+
+{% highlight emacs-lisp %}
+;; test x is nil or integer 0
+(or (eq x nil) (eq x 0))
+{% endhighlight %}
+
+
 ###### Iteration
-* while' loops.
+
+####### `while condition forms...`
+* while  `non-nil` condition evaluation,  evaluate forms in textual order
+* exit on `nil` condition or `throw`
+
+{% highlight emacs-lisp %}
+ (setq num 0)
+      => 0
+ (while (< num 4)
+   (princ (format "Iteration %d." num))
+   (setq num (1+ num)))
+      -| Iteration 0.
+      -| Iteration 1.
+      -| Iteration 2.
+      -| Iteration 3.
+      => nil
+{% endhighlight %}
+
+* support for `repeat` until loop available
+
+####### `dolist (var list [result]) body...`
+* execute body for each element of `list`
+* `var` hods the current element
+* returns value of `result` or `nil` if result ommited
+{% highlight emacs-lisp %}
+(defun reverse (list)
+  (let (value)
+    (dolist (elt list value)
+      (setq value (cons elt value)))))
+{% endhighlight %}
+
+####### `dotimes (var count [result]) body...`
+* evaluate body from `[0,count)`
+* return `result`
+
+{% highlight emacs-lisp %}
+;; lol
+(dotimes (i 100)
+  (insert "I will not obey absurd orders\n"))
+{% endhighlight %}
+
+
 ###### Nonlocal Exits
 * Jumping out of a sequence.
 
