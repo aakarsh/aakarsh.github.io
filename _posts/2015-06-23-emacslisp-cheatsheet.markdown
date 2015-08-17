@@ -565,14 +565,22 @@ error--> Symbol's value as variable is void: x
 {% endhighlight %}
   * file reloading will initialize it the first time but not second time unless `C-M-x` is used
 
-
-
 * Accessing Variables
+  * `symbaol-value symbol`
+    * returns value in `symbol` value cell
+    * value cell holds current (dynamic) value
+    * if variable is void throws `void-variable` error
 
+{% highlight emacs-lisp %}
+ (let ((abracadabra 'foo))
+   (symbol-value 'abracadabra))
+      => foo
+{% endhighlight %}
 
-
+     
 * Setting Variables
-
+  * `setq [symbol form]...`
+  
 * Buffer Local Variables
 
 * File Local Variables
