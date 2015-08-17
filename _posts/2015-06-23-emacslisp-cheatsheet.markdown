@@ -82,27 +82,38 @@ installation of emacs. See `(info "elisp")`
 
 ####### Buffer Type
 * The basic object of editing.
-####### Marker Type
+
+###### Marker Type
 * A position in a buffer.
-####### Window Type
+
+###### Window Type
 * Buffers are displayed in windows.
-####### Frame Type
+
+###### Frame Type
 * Windows subdivide frames.
-####### Terminal Type
+
+###### Terminal Type
 * A terminal device displays frames.
-####### Window Configuration Type
+
+###### Window Configuration Type
 * Recording the way a frame is subdivided.
-####### Frame Configuration Type
+
+###### Frame Configuration Type
 * Recording the status of all frames.
-####### Process Type
+
+###### Process Type
 * A subprocess of Emacs running on the underlying OS.
-####### Stream Type
+
+###### Stream Type
 * Receive or send characters.
-####### Keymap Type
+
+###### Keymap Type
 * What function a keystroke invokes.
-####### Overlay Type
+
+###### Overlay Type
 * How an overlay is represented.
-####### Font Type
+
+###### Font Type
 * Fonts for displaying text.
 
 #### Numbers
@@ -379,12 +390,97 @@ installation of emacs. See `(info "elisp")`
 {% endhighlight %}
 
 
-####### Errors
+###### Errors
 
 
-####### Cleanups
+
+###### Cleanups
 
 #### Variables
+
+* Global Variables
+
+  * simplest definition
+  * Instantiate a variable throughout the lifetime of the system
+
+{% highlight emacs-lisp %}
+(setq x '(a b))
+{% endhighlight %}
+
+  * Gives x the value `(a b)`
+  * `setq` special form
+  * does not evaluate  first argument
+  * second argument evaluated and bound to first
+  
+
+* Constant Variables
+  * certain symbols that evaluate to themselves
+  * `nil` and `t`
+  * `:` symbols tarting with `:`
+
+  * `keywordp object`
+    * object is symbol name starts with `:`
+
+* Local Variables
+  * values which are scoped
+  * argument variables toa function
+  * only in effect during scope
+  * allows for nesting and superceding of values
+  * default scoping `dynamic scoping`
+  * `dynamic scoping` current value is the most recent one created regardless of `lexical placement`
+  * allows cusomtization of all variables in scope
+  
+  * `let (bindings...)  forms..`
+     * sets up local bindings
+     * returns value of last form in `forms`
+     * `binding` is either `(val)` where `val` gets bound to `nil`
+     * or `(var value)` where variable is bound to value
+{%  highlight  emacs-lisp %}
+(setq y 2)
+     => 2
+;; value of y gets overriden     
+(let ((y 1)
+      (z y))
+  (list y z))
+  => (1 2)
+{% endhighlight %}
+
+  * `let* (bindings...) forms...`
+     * like let but binding available right after computation
+     * expression in next binding can represent previous binding
+
+{%  highlight  emacs-lisp %}
+(setq y 2)
+     => 2
+
+(let* ((y 1)
+       (z y))    ; Use the just-established value of `y'.
+  (list y z))
+     => (1 1)     
+{% endhighlight %}
+
+  
+
+* Void Variables
+
+* Defining Variables
+
+* Tips for Defining
+
+* Accessing Variables
+
+* Setting Variables
+
+* Buffer Local Variables
+
+* File Local Variables
+
+* Directory Local Variables
+
+* Variable Aliases
+
+* Variables with Restricted Values
+
 #### Functions
 #### Macros
 #### Customization
