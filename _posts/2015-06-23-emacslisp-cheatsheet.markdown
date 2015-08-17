@@ -580,7 +580,23 @@ error--> Symbol's value as variable is void: x
      
 * Setting Variables
   * `setq [symbol form]...`
-  
+    * symbol given value result of form
+    * does not evaluate symbol
+    * argument gets automatically quoted
+
+{% highlight emacs-lisp %}
+(setq x (1+ 2))
+     => 3
+     
+(let ((x 5))
+  (setq x 6)        ; The local binding of `x' is set.
+  x)
+     => 6
+x                   ; The global value is unchanged.
+     => 3
+{% endhighlight %}
+
+
 * Buffer Local Variables
 
 * File Local Variables
