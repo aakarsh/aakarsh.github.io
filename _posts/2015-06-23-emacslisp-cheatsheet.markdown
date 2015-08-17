@@ -459,10 +459,58 @@ installation of emacs. See `(info "elisp")`
      => (1 1)     
 {% endhighlight %}
 
-  
-
 * Void Variables
+  * if symbol has unassigned value cell
+  * unassigned value cell not the same as `nil` assigned
+  * evaluating results in `void-variable` error
 
+
+  * `makeunbound symbol`
+     * empties out value cell making variable void
+     * return symbol
+     * if symbol has `dynamic local binding` unbinding only has effect over last shadowed local
+
+{% highlight emacs-lisp %}
+(setq x 1)               ; Put a value in the global binding.
+     => 1
+(let ((x 2))             ; Locally bind it.
+  (makunbound 'x)        ; Void the local binding.
+  x)
+error--> Symbol's value as variable is void: x
+x                        ; The global binding is unchanged.
+     => 1
+
+(let ((x 2))             ; Locally bind it.
+  (let ((x 3))           ; And again.
+    (makunbound 'x)      ; Void the innermost-local binding.
+    x))                  ; And refer: it's void.
+error--> Symbol's value as variable is void: x
+
+(let ((x 2))
+  (let ((x 3))
+    (makunbound 'x))     ; Void inner binding, then remove it.
+  x)                     ; Now outer `let' binding is visible.
+     => 2
+{% endhighlight %}
+
+  * `boundp variable`
+     * returns `t` if `variable` is not void `nil` otherwise
+
+{% highlight emacs-lisp %}
+(boundp 'abracadabra)          ; Starts out void.
+     => nil
+(let ((abracadabra 5))         ; Locally bind it.
+  (boundp 'abracadabra))
+     => t
+(boundp 'abracadabra)          ; Still globally void.
+     => nil
+(setq abracadabra 5)           ; Make it globally nonvoid.
+     => 5
+(boundp 'abracadabra)
+     => t
+{% endhighlight %}
+
+  
 * Defining Variables
 
 * Tips for Defining
