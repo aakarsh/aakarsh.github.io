@@ -623,10 +623,135 @@ one
 
 
 * Scoping Rules for Variable Bindings
-  * 
-  * 
+  * by default local bindings are `dynamic bindings`
+  * `dynamic bindings` have `indefinite scope`
+  * `dynamic bindings` have `dynamic extent` lasts as long as binding construct(`let` form) is being executed
+  * `lexical bindings` optional support in emacs
+  * `lexical bindings` any reference to variable must be textually within binding construct
+  * `lexical binding` chan have `indefinite extent` under `closures` where binding can live even after finshed execution of binding construct
+
+
+* Dynamic Binding
+  * variables binding is its current binding at during execution of Lisp program.
+  * The most recently-created dynamic local binding
+  * indefinite scope and synamic extent
+  * shown in example below
+  
+{% highlight emacs-lisp %}
+ (defvar x -99)  ; `x' receives an initial value of -99.
+
+ (defun getx ()
+   x)            ; `x' is used "free" in this function.
+
+ (let ((x 1))    ; `x' is dynamically bound.
+   (getx))
+      => 1
+
+ ;; After the `let' form finishes, `x' reverts to its
+ ;; previous value, which is -99.
+
+ (getx)
+      => -99
+{% endhighlight %}
+  * Free reference in `getx`
+  * within `let` takes on `let`'s binding for `x`
+  * outiside `takes global value of `x`
+
+{% highlight emacs-lisp %}
+(defvar x -99)      ; `x' receives an initial value of -99.
+
+(defun addx ()
+  (setq x (1+ x)))  ; Add 1 to `x' and return its new value.
+
+(let ((x 1))
+  (addx)
+  (addx))
+     => 3           ; The two `addx' calls add to `x' twice.
+
+;; After the `let' form finishes, `x' reverts to its
+;; previous value, which is -99.
+
+(addx)
+     => -98
+{% endhighlight %}
+
+  * Simple implementation
+  * Each symbol value cell has current `dynamic value`
+  * new values assigned are recorded in a stack
+  * when binding construct (eg. `let`) finishes pops off old value from stack
+  * restores old value in value cell
+
+  * Proper Use of Dynamic Binding
+    * powerful since variables not textually defined can be used
+    * can make programs hard to understand
+    * keep it simple
+      * if no global definition use variables as a local variable in binding cosntruct
+      * else use `defvar` , `defconst` or `defcustom` with variable documentation
+      * see variable definition using `C-h v`
+* Lexical Binding
+
+{% highlight emacs-lisp %}
+(let ((x 1))    ; `x' is lexically bound.
+  (+ x 3))
+     => 4
+
+(defun getx ()
+  x)            ; `x' is used "free" in this function.
+
+(let ((x 1))    ; `x' is lexically bound.
+  (getx))
+error--> Symbol's value as variable is void: x
+{% endhighlight %}
+
+  * Each binding construct defines a lexical environment
+  * specify symbols bound in construct
+  * when evaluator wants variable find first lexical environment
+  * lexical bindings can have indefinite extent.
+  * lexical environment can be "kept around" in "closure"
+  * closure created when named or anonymous function with lexical binding enabled.
+
+{% highlight emacs-lisp %}
+(defvar my-ticker nil)   ; We will use this dynamically bound
+                         ; variable to store a closure.
+
+(let ((x 0))             ; `x' is lexically bound.
+  (setq my-ticker (lambda ()
+                    (setq x (1+ x)))))
+    => (closure ((x . 0) t) ()
+          (1+ x))
+
+(funcall my-ticker)
+    => 1
+
+(funcall my-ticker)
+    => 2
+
+(funcall my-ticker)
+    => 3
+
+x                        ; Note that `x' has no global value.
+error--> Symbol's value as variable is void: x
+{% endhighlight %}
+
+  * lexical environtment deined by let
+  * `x` locally bound
+  * lambda expression automatically turned into a closure
+  * evaluation will increment `x` using `x` in stored lexical environment
+  * `symbol-value`, `boundp` and `set` only retrieve and modify variables dynamic binding
+  * code in body of `defun` and `defmacro` cannot reffer to surrounding lexical varaibles.
+  * lexical variables not used as much
+  * opportunities for optimization.
+
+  * lexical binding enabled if `buffer-local` variable `lexical-binding` is not `nil`
+  * `lexical-binding` use lexical instead of dynamic binding but special variables still dynamically bound
+  * must be set in the first line of the file
+  * eval has a `LEXICAL` argument that enables lexical bindings
+  * `speical-variable-p SYMBOL` a special variable
+  * byte-compiler wll warn usage of free variables
   
 * Buffer Local Variables
+
+
 
 * File Local Variables
 
