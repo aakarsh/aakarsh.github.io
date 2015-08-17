@@ -348,10 +348,40 @@ installation of emacs. See `(info "elisp")`
 * `lexical` nesting unnecessary only needs to be chronologically after `catch`
 * `emacs-lisp` uses only `throw` for non-local exits
 
+####### `catch tag body...`
+* extablishes a return point distinguished by tag
+* `tag` can be anything but `nil`
+* evaluate `body` in textual order
+* if corresponding `throw` executed, exit with `throw` second argument as value
 
+####### `throw tag value`
+
+* return to previously established `catch`
+* if multiple `tag` matches use innermost
+* `value` becomes value returned by `catch`
 
 ####### Examples of Catch
+
+* Using `catch` `throw` to exit a double nested loop
+
+{% highlight emacs-lisp %}
+;; Example exiting a double nested loop
+(defun search-foo ()
+  (catch 'loop
+    (let ((i 0))
+      (while (< i 10)
+        (let ((j 0))
+          (while (< j 10)
+            (if (foo i j)
+                (throw 'loop (list i j)))
+            (setq j (1+ j))))
+        (setq i (1+ i))))))
+{% endhighlight %}
+
+
 ####### Errors
+
+
 ####### Cleanups
 
 #### Variables
