@@ -23,6 +23,7 @@ Development book by Robert Love.
 * virtual memory pages are smallest unit.
 * Page sizes architecture specific `32-bit` `4Kb` page size `64-bit` `Kb` page size
 * Kernel keeps track of pages in `struct page` structure
+* pages kept track are the actual `physical pages` these are not virtual pages.
 * `struct page` defined in `<linux/mm_types.h>`
 
 {% highlight C %}
@@ -100,10 +101,25 @@ enum pageflags {
 };
 {% endhighlight %}
 
-* 
+* `_count` field represents the usage count for a page
+  * negative count field indicates page is free for allocation
+  * access via the `page_count()` macro, provides locking, atomic read
+  
+* `virtual` virtual address of the page.
+   * the virtual address of page
+   * for pages in `HIGH_MEM` which need to be mapped as needed `NULL`
+   
+* This structure keeps track of the data about physical pages has less
+  to do with actual pages.
 
+* `struct page` consumes about `40 bytes`
+   * Assuming `4Gb` system with `8Kb` page size
+   * Means `524,288` pages
+   * That is `20 Mb` of `struct pages` in memory
 
 # Zones
+
+
 
 # Getting Pages
 
