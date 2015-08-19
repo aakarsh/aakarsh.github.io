@@ -116,8 +116,7 @@ enum pageflags {
    * Assuming `4Gb` system with `8Kb` page size
    * Means `524,288` pages
    * That is `20 Mb` of `struct pages` in memory
-
-
+   
 # Zones
 
 * Allows for non uniform treatment of pages
@@ -347,9 +346,105 @@ struct zone {
 
 # Getting Pages
 
+* methods for requesting memory at page size granularity in `linux/gfp.h`
+* `struct page * alloc_pages(gfp_t gfp_mask, unsigned int order)`
+  * core function to fetch pages
+  * allocates `2^order` or `(1 << order)` pages
+  * returns poniter to first page
+  * Convert to `logical address` of where page resides using `void * page_address(struct page *page)`
+
+* `unsigned long __get_free_pages(gfp_t gfp_mask, unsigned int order)`
+  * Returns `logical address` where the page resides
+  * used when `struct page` not required
+  * returned pages are contiguous and follow the first
+* `unsigned long get_zeroed_page(unsigned int gfp_mask)`
+  * useful for pages handed to userspace
+  * prevent leaking sensitive data
+
+* Freeing pages.
+  * `void __free_pages(struct page *page, unsigned int order)`
+  * `void free_pages(unsigned long addr, unsigned int order)`
+  * `void free_page(unsigned long addr)`
+  * double free is a serious problem in the kernel
+
+* All allocations can fail and we can get `NULL` logical address
+
+{% highlight C %}
+unsigned long page;
+
+// allocalte 2^3 or eight pages
+// page is the logical address
+page = __get_free_pages(GFP_KERNEL, 3);
+
+if (!page) {
+/* insufficient memory: you must handle this error! */
+return –ENOMEM;
+}
+
+/* ‘page’ is now the address of the first of eight contiguous pages ... */
+
+// free the 8 pages.
+free_pages(page, 3);
+
+{% endhighlight %}
+
+
 # `kmalloc()`
 
+* Useful or byte sized allocation
+* delcared in `<linux/slab.h>`
+* preffered choice if allocations are not multiples of page size
+
+* `void * kmalloc(size_t size, gfp_t flags)`
+* returned memory is at least `size` bytes in length
+
+{% highlight C %}
+struct dog *p;
+
+p = kmalloc(sizeof(struct dog), GFP_KERNEL);
+
+if (!p)
+   /* handle error ... */
+
+{% endhighlight %}
+
+* `gfp_mask` Flags
+  * flags defined in `linux/types.h`
+  * as `unsigned int`
+  * Flag Types
+    * action modifiers
+      * how memory is allocated
+      * eg. during interrupt handler allocations should fail but never sleep
+    * zone modifiers
+      * specify where the memory is allocated
+    * types
+      * Specify combination of action and zone modifiers
+      * `GFP_KERNEL`
+        * for code in `process context`
+* Action Modifiers
+  * 
+
+* `kfree()`
+  * frees block of memory previously allocated
+  * `void kfree(const void *ptr)`
+  * double free is a serios bug.
+  * `kfree(NULL)` is checked for and works
+
+{% highlight C %}
+char *buf;
+
+buf = kmalloc(BUF_SIZE, GFP_ATOMIC);
+if (!buf)
+   /* error allocating memory ! */
+   
+kfree(buf);
+
+{% endhighlight %}
+
+
 # `vmalloc()`
+
+* 
 
 # Slab Layer
 
@@ -361,7 +456,7 @@ struct zone {
 
 # New-Per-CPU Interface
 
-# Reeasons for using Per-CPU Data
+# Reasons for using Per-CPU Data
 
 # Picking an Allocation Method
 
