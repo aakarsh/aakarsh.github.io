@@ -751,7 +751,59 @@ error--> Symbol's value as variable is void: x
   
 * Buffer Local Variables
 
+  * binding associated with a particular buffer
+  * binding in effect only when buffer is `current`
+  * if variable set then new value set in `buffer-local` binding
+  * ordinary binding called `default binding`
+  * variable can have buffer local binding in some buffers
+  * `make-local-varaible` affects only current buffer
+  * `make-variable-buffer-local` makes the variable local in all buffers and future buffers
+  * `setq-default` becomes the only way to change a variable made local to all buffers
+  * `*WARNING*` if `let` has been used to shadow a buffer-local variable but current buffer has changed  let binding wont be visible
 
+{% highlight emacs-lisp %}
+     (setq foo 'g)
+     (set-buffer "a")
+     (make-local-variable 'foo)
+     (setq foo 'a)
+     (let ((foo 'temp))
+       ;; foo => 'temp  ; let binding in buffer `a'
+       (set-buffer "b")
+       ;; foo => 'g     ; the global value since foo is not local in `b'
+       BODY...)
+     foo => 'g        ; exiting restored the local value in buffer `a',
+                      ; but we don't see that in buffer `b'
+     (set-buffer "a") ; verify the local value was restored
+     foo => 'a
+{% endhighlight %}
+  
+  * Creating and Deleting Buffer-Local Bindings
+    * `make-local-variable variable`
+      * starts with original value of variable
+      * other buffers remain unaffected
+      * The value returned is `variable`
+      * If variable is void it remains void
+
+{% highlight emacs-lisp %}
+          ;; In buffer `b1':
+          (setq foo 5)                ; Affects all buffers.
+               => 5
+          (make-local-variable 'foo)  ; Now it is local in `b1'.
+               => foo
+          foo                         ; That did not change
+               => 5                   ;   the value.
+          (setq foo 6)                ; Change the value
+               => 6                   ;   in `b1'.
+          foo
+               => 6
+
+          ;; In buffer `b2', the value hasn't changed.
+          (with-current-buffer "b2"
+            foo)
+               => 5
+{% endhighlight %}
+   * `make-variable-buffer-local variable`
+     * 
 
 * File Local Variables
 

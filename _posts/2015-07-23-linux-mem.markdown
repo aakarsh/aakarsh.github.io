@@ -1,0 +1,132 @@
+---
+layout: post
+title: Some notes on memory management in the Linux Kernel (draft)
+category:  linux
+published: true
+---
+
+Just a small collection of notes on memory management in the
+Kernel. The underlying reference for which is the Linux Kernel
+Development book by Robert Love.
+
+# Why is memory allocation in the kernel hard ?
+
+* Not easy to deal with memory allocatione erros.
+* Kernel often cannot sleep.
+* Require special primitives different from userspace.
+
+# Pages
+
+* Physical Pages act as basic unit of memory management
+* Different from processor's smallest addressable unit (byte or word)
+* Hardware provides assistence via the `MMU` (memory management unit)
+* virtual memory pages are smallest unit.
+* Page sizes architecture specific `32-bit` `4Kb` page size `64-bit` `Kb` page size
+* Kernel keeps track of pages in `struct page` structure
+* `struct page` defined in `<linux/mm_types.h>`
+
+{% highlight C %}
+struct page {
+   unsigned long flags;
+   atomic_t _count;
+   atomic_t _mapcount;
+   unsigned long private;
+   struct address_space *mapping;
+   pgoff_t index;
+   struct list_head lru;
+   void *virtual;
+};
+{% endhighlight %}
+
+* flags stores the status of the page 32-different flags available see `<linux/page-flags.h>`
+  * See the page flags enum for list of states
+
+{% highlight C %}
+enum pageflags {
+	PG_locked,		/* Page is locked. Don't touch. */
+	PG_error,
+	PG_referenced,
+	PG_uptodate,
+	PG_dirty,
+	PG_lru,
+	PG_active,
+	PG_slab,
+	PG_owner_priv_1,	/* Owner use. If pagecache, fs may use*/
+	PG_arch_1,
+	PG_reserved,
+	PG_private,		/* If pagecache, has fs-private data */
+	PG_private_2,		/* If pagecache, has fs aux data */
+	PG_writeback,		/* Page is under writeback */
+#ifdef CONFIG_PAGEFLAGS_EXTENDED
+	PG_head,		/* A head page */
+	PG_tail,		/* A tail page */
+#else
+	PG_compound,		/* A compound page */
+#endif
+	PG_swapcache,		/* Swap page: swp_entry_t in private */
+	PG_mappedtodisk,	/* Has blocks allocated on-disk */
+	PG_reclaim,		/* To be reclaimed asap */
+	PG_swapbacked,		/* Page is backed by RAM/swap */
+	PG_unevictable,		/* Page is "unevictable"  */
+#ifdef CONFIG_MMU
+	PG_mlocked,		/* Page is vma mlocked */
+#endif
+#ifdef CONFIG_ARCH_USES_PG_UNCACHED
+	PG_uncached,		/* Page has been mapped as uncached */
+#endif
+#ifdef CONFIG_MEMORY_FAILURE
+	PG_hwpoison,		/* hardware poisoned page. Don't touch */
+#endif
+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+	PG_compound_lock,
+#endif
+	__NR_PAGEFLAGS,
+
+	/* Filesystems */
+	PG_checked = PG_owner_priv_1,
+
+	/* Two page bits are conscripted by FS-Cache to maintain local caching
+	 * state.  These bits are set on pages belonging to the netfs's inodes
+	 * when those inodes are being locally cached.
+	 */
+	PG_fscache = PG_private_2,	/* page backed by cache */
+
+	/* XEN */
+	PG_pinned = PG_owner_priv_1,
+	PG_savepinned = PG_dirty,
+
+	/* SLOB */
+	PG_slob_free = PG_private,
+};
+{% endhighlight %}
+
+* 
+
+
+# Zones
+
+# Getting Pages
+
+# `kmalloc()`
+
+# `vmalloc()`
+
+# Slab Layer
+
+# Statically Allocating on the Stack
+
+# High Memory Pages
+
+# Per CPU Allocation
+
+# New-Per-CPU Interface
+
+# Reeasons for using Per-CPU Data
+
+# Picking an Allocation Method
+
+  
+### Summary
+
+
+---
