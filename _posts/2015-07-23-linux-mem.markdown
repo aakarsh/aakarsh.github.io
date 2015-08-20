@@ -586,6 +586,93 @@ vfree(buf);
 
 # Slab Layer
 
+* Generalization of the idea of `free lists` of certain granularity of
+  data
+* Tries to avoid cost of allocation/deallocation
+* consolidates the idea of `free lists` in the kernel
+* Allows kernel global management of free lists
+
+* Why do we use the slab allocator ?
+  * Frequently used data structures are allocated and freed often
+  * arranging free lists contiguously means less memory fragmentation from frequent alloc/free
+  * freed objects immediately available for subsequent use
+  * allocator aware of obj size, page size ,total cache
+  * using some processor specific memory in slabs , means fewer locks
+  * NUMA aware allocators be location sensitive in alloc/free
+
+* Design of Slab layer
+  * `objects` devided into `caches`
+  * `caches` devided into `slabs`
+  * `slabs` composed of one or more contiguous pages (typically single page)
+  * `slab` states : `full`,`partial`,`empty`
+  * requests satisfied from partial slabs
+  * if no partial slabs then request satisfied from empty slab
+  * eg. cache to store `struct inode` from `inode_cachep` , cache for `task_struct`
+
+
+  * `cache` represented `kmem_cache` with three lists `slabs_full`,`slabs_partial`,`slabs_empty`
+  * above lists stored in  `kmem_list3`
+  * `slab` described by structure in `mm/slab.c`
+
+* Slab Allocator Interface
+  * `int kmem_cache_destroy(struct kmem_cache *cachep)`
+     * invoked on module shutdown to free cache
+     * may sleep dont call from interrupt context
+     * caller must be sure that cache is empty , no active slabs
+     * caller must ensure synchronization
+  * `struct kmem_cache * kmem_cache_create(const char *name, size_t size, size_t align,
+		  unsigned long flags, void (*ctor)(void *))`
+     * Creates a cache
+     * returns a pointer to the cache created
+     * `/proc/slabinfo` to see caches , `name` shows up there
+     * `size` - size of each cache element
+     * `align` - offset of first element
+     * `ctor` - slab constructor
+       * not used but called when new pages added to cache
+     * `flags`
+        * `SLAB_HWCACHE_ALIGN` :
+           * This flag instructs the slab layer to align each object within
+           a slab to a cache line
+        * `SLAB_POISON`:
+           * fill slab with known value `a5a5a5a5` used to catch uninitialized memory
+        * `SLAB_RED_ZONE`
+          * use red zones around to detect buffer overruns
+        * `SLAB_PANIC`
+          * panic if allocation fails
+          * indicate that allocations must not fail
+        * `SLAB_CACHE_DMA`
+          * each slab must be in dma'able memory
+
+  * `void * kmem_cache_alloc(struct kmem_cache *cachep, gfp_t flags)`
+    * return poniter to object from cache
+    * allocates new pages if no free slabs
+* Example Usage
+
+{% highlight C %}
+// cache for task_structs
+struct kmem_cache *task_struct_cachep;
+
+// create the cache
+task_struct_cachep = kmem_cache_create(“task_struct”,sizeof(struct task_struct),
+                                        ARCH_MIN_TASKALIGN,SLAB_PANIC | SLAB_NOTRACK,NULL);
+
+// allocate a task struct from the cache as needed
+
+struct task_struct *tsk;
+
+tsk = kmem_cache_alloc(task_struct_cachep, GFP_KERNEL);
+
+if (!tsk)
+   return NULL;
+
+
+
+// free a task struct
+kmem_cache_free(task_struct_cachep, tsk);
+{% endhighlight %}
+
+  
+
 # Statically Allocating on the Stack
 
 # High Memory Pages
