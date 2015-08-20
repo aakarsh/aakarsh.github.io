@@ -446,8 +446,9 @@ if (!p)
 |__GFP_COMP        | The allocator adds compound page metadata           | 
 +------------------------------------------------------------------------+
 
-
 {% endhighlight %}
+
+
 * Sample usage
 {% highlight C %}
 // Sleepable, Disk IO able, file system operationable
@@ -459,7 +460,6 @@ ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
 
 * Zone Modifiers
 {% highlight C %}
-
 +------------------------------------------------------------+
 |Flag          | Description                                 |
 +------------------------------------------------------------+  
@@ -470,9 +470,71 @@ ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
 {% endhighlight %}
 
 * Use `GFP_DMA` if you *must* have dma-able memory
-* 
+* `__GFP_HIGHMEM` can use if needed
+  * only `alloc_pages` can return High memory
+  * since logcial address cannot be returned for memory not mapped
+    into kernels virtual address space
+
+* Type Flags
+  * specify combinations of action and zone modifiers
+  * simpler and less error prone
+  * 
+{% highlight C %}
++--------------------------------------------------------------------+
+|Flag          | Description                                         |
++--------------------------------------------------------------------+  
+|GFP_ATOMIC        | The allocation is high priority and must
+|                  | not sleep. This is the flag to use in interrupt
+|                  | handlers, in bottom halves, while holding a spin-
+|                  | lock, and in other situations where you cannot sleep.
+|                  |
+|GFP_NOWAIT        | Like GFP_ATOMIC , except that the call will not
+|                  | fallback on emergency memory pools. This increases the
+|                  | liklihood of the memory allocation failing.
+|                  |
+|GFP_NOIO          | This allocation can block, but must not initiate
+|                  | disk I/O. This is the flag to use in block I/O code
+|                  | when you cannot cause more disk I/O, which might lead
+|                  | to some unpleasant recursion.
+|GFP_NOFS          | This allocation can block and can initiate disk I/O,
+|                  | if it must, but it will not initiate a filesystem
+|                  | operation. This is the flag to use in filesystem code
+|                  | when you cannot start another filesystem operation.
+|GFP_KERNEL        | This is a normal allocation and might block. This is
+|                  | the flag to use in process context code when it is safe
+|                  | to sleep. The kernel will do whatever it has to do to
+|                  | obtain the memory requested by the caller. This flag
+|                  | should be your default choice.
+|GFP_USER          | This is a normal allocation and might block. This flag is used to
+|                  | allocate memory for user-space processes.
+|GFP_HIGHUSER      | This is an allocation from ZONE_HIGHMEM and might block. This
+|                  | flag is used to allocate memory for user-space processes.
+|GFP_DMA           | This is an allocation from ZONE_DMA . Device drivers that need
+|                  |DMA-able memory use this flag, usually in combination with one of
+|                  |the preceding flags.
++-----------------------------------------------------------------------------------+
 
 
+{% endhighlight %}
+
+* `GFP_NOFS (__GFP_WAIT | __GFP_IO)`
+* `GFP_KERNEL (__GFP_WAIT | __GFP_IO | __GFP_FS)`
+* `GFP_USER (__GFP_WAIT | __GFP_IO | __GFP_FS)`
+* `GFP_HIGHUSER (__GFP_WAIT | __GFP_IO | __GFP_FS | __GFP_HIGHMEM)`
+* `GFP_DMA __GFP_DMA`
+
+
+* `GFP_KERNEL` most frequently used flag
+  * can block so cannot be used interrupt context
+  * has high probability of succeeding
+  * can put caller to sleep , swap inactive pages to disk, flush diry pages,
+
+* `GFP_ATOMIC`
+  * most restirctive
+  * memory allocations which cannot sleep
+  * if no continguous chunk is available then will not call free instead just fail  
+  * less chance of succeeding 
+  
 * `kfree()`
   * frees block of memory previously allocated
   * `void kfree(const void *ptr)`
