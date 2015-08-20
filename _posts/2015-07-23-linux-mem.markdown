@@ -675,7 +675,22 @@ kmem_cache_free(task_struct_cachep, tsk);
 
 # Statically Allocating on the Stack
 
+* Kernel stacks are small and fixed
+* Kernel stack generally 2 pages per process
+* `8Kb` on `32-bit` or `16 Kb` on `64-bit`
+* Sometimes beneficial to deal with single page stacks
+  * deal with memory fragmentation
+  * allocation of new process becomes harder , not able to find contiguous pages.
+* interrupts use kernel stacks of process they interupted
+* use interrupt stacks instead - one page per processor
+* this depends on enablement of single page interrupt stacks.
+* kernel stacks will overflow into process thread info structure
+* Thus keep stack allocations minimum and use dynamic allocation.
+
+
 # High Memory Pages
+
+* 
 
 # Per CPU Allocation
 
