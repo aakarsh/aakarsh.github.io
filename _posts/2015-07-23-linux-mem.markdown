@@ -11,7 +11,7 @@ Development book by Robert Love.
 
 # Why is memory allocation in the kernel hard ?
 
-* Not easy to deal with memory allocatione erros.
+* Not easy to deal with memory allocation errors.
 * Kernel often cannot sleep.
 * Require special primitives different from userspace.
 
@@ -19,7 +19,7 @@ Development book by Robert Love.
 
 * Physical Pages act as basic unit of memory management
 * Different from processor's smallest addressable unit (byte or word)
-* Hardware provides assistence via the `MMU` (memory management unit)
+* Hardware provides assistance via the `MMU` (memory management unit)
 * virtual memory pages are smallest unit.
 * Page sizes architecture specific `32-bit` `4Kb` page size `64-bit` `Kb` page size
 * Kernel keeps track of pages in `struct page` structure
@@ -124,7 +124,7 @@ enum pageflags {
 * Example of hardware limitations
   * being able to perform `DMA` (direct memory access) only within certain memory addresses
   * large physically addressability vs small virtual addressability
-    * allow for pages not permenetly mapped into kernel address space
+    * allow for pages not permanently mapped into kernel address space
 * Four primary zones in Linux
   * `ZONE_DMA` - Pages that can do DMA
   * `ZONE_DMA32` - Pages that can do DMA and accessible on only 32 bit devices
@@ -392,8 +392,8 @@ free_pages(page, 3);
 # `kmalloc()`
 
 * Useful or byte sized allocation
-* delcared in `<linux/slab.h>`
-* preffered choice if allocations are not multiples of page size
+* declared in `<linux/slab.h>`
+* preferred choice if allocations are not multiples of page size
 
 * `void * kmalloc(size_t size, gfp_t flags)`
 * returned memory is at least `size` bytes in length
@@ -472,7 +472,7 @@ ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
 * Use `GFP_DMA` if you *must* have dma-able memory
 * `__GFP_HIGHMEM` can use if needed
   * only `alloc_pages` can return High memory
-  * since logcial address cannot be returned for memory not mapped
+  * since logical address cannot be returned for memory not mapped
     into kernels virtual address space
 
 * Type Flags
@@ -527,10 +527,10 @@ ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
 * `GFP_KERNEL` most frequently used flag
   * can block so cannot be used interrupt context
   * has high probability of succeeding
-  * can put caller to sleep , swap inactive pages to disk, flush diry pages,
+  * can put caller to sleep , swap inactive pages to disk, flush dirty pages,
 
 * `GFP_ATOMIC`
-  * most restirctive
+  * most restrictive
   * memory allocations which cannot sleep
   * if no continguous chunk is available then will not call free instead just fail  
   * less chance of succeeding 
@@ -538,7 +538,7 @@ ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
 * `kfree()`
   * frees block of memory previously allocated
   * `void kfree(const void *ptr)`
-  * double free is a serios bug.
+  * double free is a serious bug.
   * `kfree(NULL)` is checked for and works
 
 {% highlight C %}
