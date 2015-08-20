@@ -422,6 +422,8 @@ if (!p)
       * `GFP_KERNEL`
         * for code in `process context`
 * Action Modifiers
+
+{% highlight C  %}
 +------------------------------------------------------------------------+  
 | Flag             | Description                                         |
 +------------------------------------------------------------------------+
@@ -444,6 +446,8 @@ if (!p)
 |__GFP_COMP        | The allocator adds compound page metadata           | 
 +------------------------------------------------------------------------+
 
+
+{% endhighlight %}
 * Sample usage
 {% highlight C %}
 // Sleepable, Disk IO able, file system operationable
@@ -454,6 +458,8 @@ ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
   great flexibility in page allocation
 
 * Zone Modifiers
+{% highlight C %}
+
 +------------------------------------------------------------+
 |Flag          | Description                                 |
 +------------------------------------------------------------+  
@@ -461,6 +467,7 @@ ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
 |__GFP_DMA32   | Allocates only from ZONE_DMA32              |
 |__GFP_HIGHMEM | Allocates from ZONE_HIGHMEM or ZONE_NORMAL  |
 +------------------------------------------------------------+
+{% endhighlight %}
 
 * Use `GFP_DMA` if you *must* have dma-able memory
 * 
