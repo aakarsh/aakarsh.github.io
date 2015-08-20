@@ -555,7 +555,34 @@ kfree(buf);
 
 # `vmalloc()`
 
-* 
+* Allocates memory which is only `virtually continguous` unlike
+  `kmalloc` whose pages are `physically contiguous`
+* Acheived by fixing up page tables map memory into contiguos chunks
+  in `logical address` space
+* Cannot be use when hardware requires contiguos pages, due to not
+  being behind `MMU`
+* All memory would appear to kernel as logically contiguous
+* most kernel code will still use `kmalloc` for performance reasons
+* Uses greater number entries in `TLB`
+* `vmalloc` used rarely when need to allocate large regions which may fail with `kmalloc`
+* delcared in `linux/vmalloc.h` defined in `linux/vmalloc.c`
+* `void * vmalloc(unsigned long size)`
+* returned pointer is at least `size` bytes
+* cannot be used in interrupt context
+
+{% highlight C %}
+char *buf;
+buf = vmalloc(16 * PAGE_SIZE); /* get 16 pages */
+if (!buf)
+/* error! failed to allocate memory */
+/*
+* buf now points to at least a 16*PAGE_SIZE bytes
+* of virtually contiguous block of memory
+*/
+// Free with
+vfree(buf);
+{% endhighlight %}
+
 
 # Slab Layer
 
