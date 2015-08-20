@@ -422,7 +422,49 @@ if (!p)
       * `GFP_KERNEL`
         * for code in `process context`
 * Action Modifiers
-  * 
++------------------------------------------------------------------------+  
+| Flag             | Description                                         |
++------------------------------------------------------------------------+
+|__GFP_WAIT        | The allocator can sleep.                            |
+|__GFP_HIGH        | The allocator can access emergency pools.           |
+|__GFP_IO          | The allocator can start disk I/O.                   |
+|__GFP_FS          | The allocator can start filesystem I/O.             |
+|__GFP_COLD        | The allocator should use cache cold pages.          |
+|__GFP_NOWARN      | The allocator does not print failure warnings.      |
+|__GFP_REPEAT      | The allocator repeats the allocation if it          |
+|                  | fails, but the allocation can potentially fail.     |
+|__GFP_NOFAIL      | The allocator indefinitely repeats the allocation.  |
+|                  | The allocation cannot fail.                         |
+|                  |                                                     |
+|__GFP_NORETRY     | The allocator never retries if the allocation       |
+|                  | fails.                                              |
+|__GFP_NOMEMALLOC  | The allocator does not fall back on reserves.       |
+|__GFP_HARDWALL    | The allocator enforces “hardwall” cpuset boundaries.|
+|__GFP_RECLAIMABLE | The allocator marks the pages reclaimable.          |
+|__GFP_COMP        | The allocator adds compound page metadata           | 
++------------------------------------------------------------------------+
+
+* Sample usage
+{% highlight C %}
+// Sleepable, Disk IO able, file system operationable
+ptr = kmalloc(size, __GFP_WAIT | __GFP_IO | __GFP_FS);
+{% endhighlight %}
+
+* `kmalloc` calls ultimately use the `alloc_pages` and above grants
+  great flexibility in page allocation
+
+* Zone Modifiers
++------------------------------------------------------------+
+|Flag          | Description                                 |
++------------------------------------------------------------+  
+|__GFP_DMA     | Allocates only from ZONE_DMA                |
+|__GFP_DMA32   | Allocates only from ZONE_DMA32              |
+|__GFP_HIGHMEM | Allocates from ZONE_HIGHMEM or ZONE_NORMAL  |
++------------------------------------------------------------+
+
+* Use `GFP_DMA` if you *must* have dma-able memory
+* 
+
 
 * `kfree()`
   * frees block of memory previously allocated
