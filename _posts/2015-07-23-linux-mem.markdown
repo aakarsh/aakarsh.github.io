@@ -681,24 +681,158 @@ kmem_cache_free(task_struct_cachep, tsk);
 * Sometimes beneficial to deal with single page stacks
   * deal with memory fragmentation
   * allocation of new process becomes harder , not able to find contiguous pages.
-* interrupts use kernel stacks of process they interupted
+* interrupts use kernel stacks of process they interrupted
 * use interrupt stacks instead - one page per processor
 * this depends on enablement of single page interrupt stacks.
 * kernel stacks will overflow into process thread info structure
 * Thus keep stack allocations minimum and use dynamic allocation.
 
-
 # High Memory Pages
 
-* 
+* Pages from `alloc_pages()` and `__GFP_HIGHMEM`.
+* Since no permanent, high mem pages might not have logical address
+* `x86-32` all memory beyond `896 Mb` is high memory(not permanently mapped to kernel address space)
+* `x86-32` can theoretically map about `2^32`(4 Gb) and (63 Gb) with PAE
+* `x86-32` high memory pages get mapped in and out between `3 Gb` and `4 Gb`
+
+* Permanent Mappings
+  * `<linux/highmem.h>`
+  * `void * kmap(struct page* page)`
+    * works on both high and low memory
+    * returns the virtual memory if page in low memory
+    * if high memory page creates a mapping and returns the page.
+    * function may sleep - only works in process context
+    * mappings are permanent user responsible for unmapping
+    * good to unmap when usage finishes
+    
+  * `void kunmap(struct page *page)`
+    * unmap the created mapping of high memory
+
+* Temporary/Atomic Mappings
+  * To create mappings in interrupt context and other non-blocking contexts
+  * `void * kmap_atomic(struct page * page , enum km_type type)`
+    * does not block
+    * can be used in non-schedulable contexts
+    * Defined in `<asm-generic/kmap_types.h>`
+    
+    {% highlight C %}
+    enum km_type {
+       KM_BOUNCE_READ,
+       KM_SKB_SUNRPC_DATA,
+       KM_SKB_DATA_SOFTIRQ,
+       KM_USER0,
+       KM_USER1,
+       KM_BIO_SRC_IRQ,
+       KM_BIO_DST_IRQ,
+       KM_PTE0,
+       KM_PTE1,
+       KM_PTE2,
+       KM_IRQ0,
+       KM_IRQ1,
+       KM_SOFTIRQ0,
+       KM_SOFTIRQ1,
+       KM_SYNC_ICACHE,
+       KM_SYNC_DCACHE,
+       KM_UML_USERCOPY,
+       KM_IRQ_PTE,
+       KM_NMI,
+       KM_NMI_PTE,
+       KM_TYPE_NR
+    };
+    {% endhighlight %}
+
+    * Disables kernel preemption - mappings are processor unique
+    * `void kunmap_atomic(void *kvaddr, enum km_type type)`
+      * Ability to undo mapping at `kvaddr`
+      * On most architectures does nothing but enable kernel preemption
+      * a Temporary mapping is only valid until next kernel mapping
+      
 
 # Per CPU Allocation
 
-# New-Per-CPU Interface
+* On SMP use data unique to a CPU
+* Per-CPU data stored in an array
+* Items in array correspond to processor specific data
+* `get_cpu()` - get the current cpu and disable kernel preemption
+* `put_cpu()` - re-enable kernel preemption
+
+{% highlight C %}
+unsigned long my_percpu[NR_CPUS];
+
+int cpu;
+/* get current processor and disable kernel preemption */
+cpu = get_cpu();
+
+// use the cpu specific data
+my_percpu[cpu]++;
+printk(“my_percpu on cpu=%d is %lu\n”, cpu, my_percpu[cpu]);
+
+/* enable kernel preemption */
+put_cpu();
+{% endhighlight %}
+
+* locking is not required for since data unique to cpu
+* Problems with Kernel Preemption
+  * `cpu` variable  will become invalid if kernel is preempted and rescheduled on another processor
+  * another thread may access now be able to access dirty data structure on same processor
+* Using `get_cpu` ensures that kernel preemption on the procssor is disabled
+
+# The `percpu` Interface
+
+* `linux/percpu.h`
+* Definitions in `mm/slab.c` and `asm/percpu.h`
+* `DEFINE_PER_CPU(type, name);`
+  * An instance of a percpu variable with type and name
+* `get_cpu_var(name)` and `put_cpu_var(name)`
+  * disable kernel preemption and get cpu specific value
+* `per_cpu(name, cpu)++;`
+  * fetch another processor per cpu variable
+  * dangerous method since doesnt disable preemption and doesnt provide locking
+
+* Per-CPU data at Runtime
+  * In `<linux/percpu.h>`
+  * `void *alloc_percpu(type); /* a macro */`
+    * Allocate one instace per processor
+    * macro around `__alloc_percpu`
+    * alligns at byte boundary
+    * `__alignof__` - gcc feature to get recomended alignment
+    * returned pointer indirectly references dynamically created data
+    * `get_cpu_var(ptr)` fetches cpu specific pointer to dynamically created data.
+  * `void *__alloc_percpu(size_t size, size_t align);`
+    * number of bytes to allocate and alignment
+    
+  * `void free_percpu(const void *);`
+    * frees data on all the processors
+
+
+{% highlight C %}
+void *percpu_ptr;
+
+unsigned long *foo;
+
+percpu_ptr = alloc_percpu(unsigned long);
+
+if (!ptr)
+
+/* error allocating memory .. */
+foo = get_cpu_var(percpu_ptr);
+
+/* manipulate foo .. */
+put_cpu_var(percpu_ptr);
+{% endhighlight %}
+
 
 # Reasons for using Per-CPU Data
 
-# Picking an Allocation Method
+* reduction in locking
+* reduces cache invalidation due to data being modified on other processors
+* Cannot sleep in the middle of accessing per-CPU data
+
+
+# Guidelines for picking an allocation method
+* `GFP_ATOMIC` and `GFP_KERNEL` two of the most common allocations
+* For free high memory use `alloc_pages()`
+* 
 
   
 ### Summary
