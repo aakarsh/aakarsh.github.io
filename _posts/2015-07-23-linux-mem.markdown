@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Some notes on memory management in the Linux Kernel (draft)
+title: Some notes on memory management in the Linux Kernel
 category:  linux
 published: true
 ---
@@ -829,16 +829,13 @@ put_cpu_var(percpu_ptr);
 * Cannot sleep in the middle of accessing per-CPU data
 
 
-# Guidelines for picking an allocation method
+# Summary/Guidelines for picking an allocation methods
 * Mostly pick between `GFP_ATOMIC` and `GFP_KERNEL` for allocations
 * For free high memory use `alloc_pages()` since it returns `struct page`
 * Use `kmap()` to map high memory pages
-* Use `vmalloc()` when doing large allocations where contiguous memory is not a requirement
-* If doing lots of creations/destructions of same object type use slab cache, prevent fragmentation,get faster allocations
-
-
-  
-### Summary
-
+* Use `vmalloc()` when doing large allocations where contiguous memory
+  is not a requirement
+* If doing lots of creations/destructions of same object type use slab
+  cache, prevent fragmentation,get faster allocations
 
 ---
