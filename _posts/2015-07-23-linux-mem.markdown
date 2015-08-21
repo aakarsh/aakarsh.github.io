@@ -830,9 +830,12 @@ put_cpu_var(percpu_ptr);
 
 
 # Guidelines for picking an allocation method
-* `GFP_ATOMIC` and `GFP_KERNEL` two of the most common allocations
-* For free high memory use `alloc_pages()`
-* 
+* Mostly pick between `GFP_ATOMIC` and `GFP_KERNEL` for allocations
+* For free high memory use `alloc_pages()` since it returns `struct page`
+* Use `kmap()` to map high memory pages
+* Use `vmalloc()` when doing large allocations where contiguous memory is not a requirement
+* If doing lots of creations/destructions of same object type use slab cache, prevent fragmentation,get faster allocations
+
 
   
 ### Summary
