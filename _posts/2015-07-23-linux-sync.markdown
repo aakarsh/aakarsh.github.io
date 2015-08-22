@@ -60,12 +60,14 @@ Development book by Robert Love.
       * if `v` is zero returns true
       * else return false
     * List of Atomic Operations
+    
     {% highlight C %}
     // Atomic Integer Operation Description
     //At declaration, initialize to i.
     ATOMIC_INIT(int i)
     // Atomically read the integer value of v.
     int atomic_read(atomic_t *v)
+    
     // Atomically set v equal to i.
     void atomic_set(atomic_t *v, int i)
     
@@ -83,7 +85,7 @@ Development book by Robert Love.
     
     // Atomically subtract i from v and
     // return true if the result is zero;
-    //otherwise false.
+    // otherwise false.
     int atomic_sub_and_test(int i, atomic_t *v)
     
     //Atomically add i to v and return
@@ -117,6 +119,136 @@ Development book by Robert Love.
     int atomic_inc_and_test(atomic_t *v) 
 {% endhighlight %}
 
+* Implemented as inline functions & inline assembly
+* word sized reads always atomic
+* most architectures read/write of a single byte is atomic( no two simultaneous operations)
+* read is consistent(ordered either before or after the write)
+* Thus on most architectures we get
+
+{% highlight C %}
+/**
+* atomic_read - read atomic variable
+* @v: pointer of type atomic_t
+*
+* Atomically reads the value of @v.
+*/
+static inline int atomic_read(const atomic_t *v)
+{
+   return v->counter;
+}
+{% endhighlight %}
+
+* Consitent atomicity does not guarantee consistent ordering (use memory barriers for enforced ordering)
+* `64-bit` architectures
+  * `atomic_t` size cant be different for different architectuers
+    * `atomic_t` is consitently 32-bit accross architectuers
+  * `atomic64_t` is used to for 64-bit atomic operations on 64 bit machines
+  * nearly all atomic operations listed above implement a 64-bit version
+  * all corresponding functions shown below
+
+{% highlight C %}
+typedef struct {
+  volatile long counter;
+} atomic64_t;
+ATOMIC64_INIT(long i)
+long atomic64_read(atomic64_t *v)
+void atomic64_set(atomic64_t *v, int i)
+void atomic64_add(int i, atomic64_t *v)
+void atomic64_sub(int i, atomic64_t *v)
+void atomic64_inc(atomic64_t *v)
+void atomic64_dec(atomic64_t *v)
+int atomic64_sub_and_test(int i, atomic64_t *v)
+int atomic64_add_negative(int i, atomic64_t *v)
+long atomic64_add_return(int i, atomic64_t *v)
+long atomic64_sub_return(int i, atomic64_t *v)
+long atomic64_inc_return(int i, atomic64_t *v)
+long atomic64_dec_return(int i, atomic64_t *v)
+int atomic64_dec_and_test(atomic64_t *v)
+int atomic64_inc_and_test(atomic64_t *v)
+{% endhighlight %}
+
+* Atomic Bit Operations
+  * architecture specific code
+  * `asm/bitops.h` for details
+  * operate on generic pointers
+  * on `32-bit machines`
+    * bit `31` most significant bit
+    * bit `0` least significant bit
+  * Non-atomic versions of bit operations provided but their name prefixed with `__`
+    * `test_bit()` atomic version , `__test_bit()` non-atomic version
+    * when dont need locking use non-atomic versions for performance
+    
+{% highlight C %}
+
+/**
+ * Atomically set the nr -th bit starting from addr.
+ */
+void set_bit(int nr, void *addr)
+
+/**
+ * Atomically clear the nr -th bit starting from addr.
+ */
+void clear_bit(int nr, void *addr)
+
+/**
+ * Atomically flip the value of the nr -th bit starting from addr.
+ */
+void change_bit(int nr, void *addr)
+
+/**
+ * Atomically set the nr -th bit starting from addr and return the previous value.
+ */
+int test_and_set_bit(int nr, void *addr)
+
+/**
+ * Atomically clear the nr -th bit starting from addr and return the
+ * previous value.
+ */
+int test_and_clear_bit(int nr, void *addr)
+
+/**
+ * Atomically flip the nr -th bit starting from addr and return the
+ * previous value.
+ */
+int test_and_change_bit(int nr, void *addr)
+
+/**
+ * Atomically return the value of the nr -
+ * th bit starting from addr.
+ */ 
+int test_bit(int nr, void *addr)
+
+{% endhighlight %}
+
+* See example usage setting and clearing bits atomically
+
+{% highlight C %}
+
+unsigned long word = 0;
+/* bit zero is now set (atomically) */
+set_bit(0, &word);
+
+/* bit one is now set (atomically) */
+set_bit(1, &word);
+
+/* will print “3” */
+printk(“%ul\n”, word);
+/* bit one is now unset (atomically) */
+clear_bit(1, &word);
+/*bit zero is flipped; now it is unset (atomically) */
+change_bit(0, &word);
+
+/* atomically sets bit zero and returns the previous value (zero) */
+if (test_and_set_bit(0, &word)) {
+/* never true ... */
+}
+
+/* the following is legal; you can mix atomic bit instructions with normal C */
+word = 7;
+{% endhighlight %}
+
+
+  
 # Spin Locks
 
 # Semaphores
