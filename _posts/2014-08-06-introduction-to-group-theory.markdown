@@ -15,7 +15,7 @@ be I.J Herstein's Abstract Algebra : Theory and Practice
       and denoted by `.` such that
         * `closure` :  \\( a,b \in G \\) implies that \\( a.b \in G \\)
         * `associative`: \\( a,b,c \in G \\) implies that \\( a.(b.c) = (a.b).c \\)
-        * `identity`: \\( \exists e \in G \\)  such that   \\( a.e = e.a = a \forall a \in G \\)
+        * `identity`: \\( \exists e \in G \\)  such that   \\( a.e = e.a = a \\) \\( \forall a \in G \\)
         * `inverse` : \\(\forall a \in G \\) we have \\( \exists a^{-1} \in G \\) such that \\( a.a^{-1} = e \\)
         
     * `Abelian(Commutative) Group` : A `group G` such that \\( \forall a,b \in G\\) we have \\( a.b = b.a \\)
