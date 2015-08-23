@@ -19,8 +19,11 @@ be I.J Herstein's Abstract Algebra : Theory and Practice
         * `inverse` : $\forall a \in G $ $ \exits a^{-1} \in G $ s.t $ a.a^{-1} = e $
         
     * `Abelian(Commutative) Group` : A `group G` s.t $ \forall a,b \in G , a.b = b.a $
-    
+
   * Some Examples of Groups
+    * Ex : Let `G` be integers let `.` be `+` then we have a group
+      with `e` as `0` and $a^{-1} = -a$
+    
   * Preliminary Lemmas
   * Subgroups
   * A Counting Principle
