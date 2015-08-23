@@ -25,7 +25,15 @@ be I.J Herstein's Abstract Algebra : Theory and Practice
       with `e` as `0` and \\(a^{-1} = -a\\)
     
   * Preliminary Lemmas
+    * `Lemma` If `G` is a group then
+      * The identity element of `G` is unique
+      * Every \\( a \in G \\) , \\( a^{-1})^{-1} = a \\)
+      * For every \\( a,b \in G \\) we have \\( (a.b)^{-1} = b^{-1}. a^{-1} \\)      
   * Subgroups
+    * A on non-empty `subset H `of group `G` is a subgroup of `G`  if and only if
+      * \\(a,b \in H \\) implies that \\( ab \in H \\)
+      * \\(a \in H \\) implies that \\( a^{-1} \in H \\)
+      
   * A Counting Principle
   * Normal Subgroups and Quotient Groups
   * Homomorphisms
