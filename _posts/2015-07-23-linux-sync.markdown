@@ -358,7 +358,8 @@ spin_is_locked()
 
 * Reader-Writer Spin Locks
   * Dealing with the asymmetrical nature of reading and writing.
-  * When writing 
+  * When writing
+  
     *
 
 # Semaphores
