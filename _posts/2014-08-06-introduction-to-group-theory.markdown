@@ -18,7 +18,7 @@ be I.J Herstein's Abstract Algebra : Theory and Practice
         * `identity`: \\( \exists e \in G \\)  such that   \\( a.e = e.a = a \forall a \in G \\)
         * `inverse` : \\(\forall a \in G \\) we have \\( \exists a^{-1} \in G \\) such that \\( a.a^{-1} = e \\)
         
-    * `Abelian(Commutative) Group` : A `group G` such that \\( \forall a,b \in G , a.b = b.a \\)
+    * `Abelian(Commutative) Group` : A `group G` such that \\( \forall a,b \in G\\) we have \\( a.b = b.a \\)
 
   * Some Examples of Groups
     * Ex : Let `G` be integers let `.` be `+` then we have a group
