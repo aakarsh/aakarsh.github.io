@@ -246,10 +246,120 @@ if (test_and_set_bit(0, &word)) {
 /* the following is legal; you can mix atomic bit instructions with normal C */
 word = 7;
 {% endhighlight %}
-
-
   
 # Spin Locks
+
+* Allow for creation of critical regions in code
+* spinlock can be held by at most one thread at a time
+* contending threads busy loop waiting for the lock to unlock
+* if lock is uncontended acquire lock and proceed instantly
+* busy loop will `"waste"` processor time
+* thus must minmize length of time spinlock is held
+* advantage that doesnt result in context switches
+* can be used in contexts which do not support blocking (interrupt context) or (preemption disabled?)
+* Spin Lock Methods
+  * Defined in `linux/spinlock.h`
+  {% highlight C %}  
+  DEFINE_SPINLOCK(my_lock);
+  // acquire the spin lock
+  spin_lock(&my_lock);
+  ... place critical region here ..
+  //release the spin lock
+  spin_unlock(&my_lock);
+  {% endhighlight %}
+
+  * On uniprocessor system spinlocks compile away
+    * "some people" say they have some side effects, and spinlocs are not noops
+    * need to verify
+    * act as markers to enable disable kernel preemption
+  * Spinlocks are not recursive
+    * trying to acquire the same lock again will hang the thread of execution
+    
+ * Using spinlock in interrupt context - need to disable `local interrupts` on this processor
+   * if preemption not disabled may deadlock on the lock this processor already holds
+   * Thus need to use methods to which will disable interrupts
+ * `spin_lock_irqsave`
+   * save the current state of interrupts
+   * disables interrupts locally
+   * obtain the spinlock
+ * `spin_unlock_irqrestore`
+   * unlock the given lock
+   * returns interrupts to `previous state`
+     * This is *key* , if the interrupts were disabled on entry then we need should keep them disabled
+     * allows nesting of different spinlocks and interrupt disabling clode
+ * Locks should be associated with data structures which they lock
+ * make association of lock with data clearer by naming conventions
+
+
+{% highlight C %}
+DEFINE_SPINLOCK(my_lock);
+
+unsigned long flags;
+
+spin_lock_irqsave(&my_lock, flags);
+
+/* critical region ... */
+
+spin_unlock_irqrestore(&my_lock, flags);
+
+{% endhighlight %}
+
+
+* Kernel Configs to help Spin Lock Debugging
+  * `CONFIG_DEBUG_SPINLOCK`
+    * using uninitialized spinlock detection
+    * unlocking a lock which was never locked
+  * `CONFIG_DEBUG_LOCK_ALLOC`
+    * debugging lock lifecycles?
+
+* Dynamic Allocation of Spinlock
+  * `spin_lock_init()` initialize dynamically created spinlock, ie with a pointer
+  * `spin_trylock()` - try to obtain lock, if fail return 0, if succed return non-zero
+
+{% highlight C %}
+/* Acquires given lock*/
+spin_lock()
+
+/** Disables local interrupts and acquires given lock */
+spin_lock_irq()
+
+/** Saves current state of local interrupts, disables local inter-
+/  rupts, and acquires given lock */
+spin_lock_irqsave()
+
+/** Releases given lock */
+spin_unlock()
+
+/** Releases given lock and enables local interrupts */
+spin_unlock_irq()
+
+/** Releases given lock and restores local interrupts to given pre-
+vious state */
+spin_unlock_irqrestore()
+
+/** Dynamically initializes given spinlock_t */
+spin_lock_init()
+
+/** Tries to acquire given lock; if unavailable, returns nonzero */
+spin_trylock()
+
+/** Returns nonzero if the given lock is currently acquired, other-
+wise it returns zero */
+spin_is_locked()
+
+{% endhighlight %}
+
+* Spin Locks and Bottom Halfs
+  * Bottom halfs preempt process contexts
+  * two tasklets of same type dont run concurrently
+  * tasklet never preempts another tasklet on same processor
+  * interrupt context can preempt bottom halfs and process contexts
+  * Process context should disable bottom half preemption over contended locks
+
+* Reader-Writer Spin Locks
+  * Dealing with the asymmetrical nature of reading and writing.
+  * When writing 
+    *
 
 # Semaphores
 
