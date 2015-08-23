@@ -13,16 +13,16 @@ be I.J Herstein's Abstract Algebra : Theory and Practice
     * `Group:` A non empty set of elements `G` is said to form a `group`
       if in `G` there is a defined `binary operation` called `product`
       and denoted by `.` such that
-        * `closure` : $$ a,b \in G $$ implies that $$ a.b \in G $$
-        * `associativity`:$$ a,b,c \in G $$ implies that $$ a.(b.c) = (a.b).c $$
-        * `identity`: $$ \exists e \in G $$ s.t $$ a.e = e.a = a \forall a \in G $$
-        * `inverse` : $$\forall a \in G $$ $$ \exists a^{-1} \in G $$ s.t $$ a.a^{-1} = e $$
+        * `closure` : \( a,b \in G \) implies that \( a.b \in G \)
+        * `associativity`:\( a,b,c \in G \) implies that \( a.(b.c) = (a.b).c \)
+        * `identity`: \( \exists e \in G \) s.t \( a.e = e.a = a \forall a \in G \)
+        * `inverse` : \(\forall a \in G \) \( \exists a^{-1} \in G \) s.t \( a.a^{-1} = e \)
         
-    * `Abelian(Commutative) Group` : A `group G` s.t $$ \forall a,b \in G , a.b = b.a $$
+    * `Abelian(Commutative) Group` : A `group G` s.t \( \forall a,b \in G , a.b = b.a \)
 
   * Some Examples of Groups
     * Ex : Let `G` be integers let `.` be `+` then we have a group
-      with `e` as `0` and $$a^{-1} = -a$$
+      with `e` as `0` and \(a^{-1} = -a\)
     
   * Preliminary Lemmas
   * Subgroups
