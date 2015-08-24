@@ -358,9 +358,120 @@ spin_is_locked()
 
 * Reader-Writer Spin Locks
   * Dealing with the asymmetrical nature of reading and writing.
-  * When writing
+  * Writing demands mutal exclusion
+    * no reading permitted
+    * no writing permitted
+  * Reading requires - write exclusion
+    * no writers permitted
+    * multiple readers ok
+    
+  * Reader-Writer spinlocks increase throughput by allowing multiple readers
+  * Provide separate variants of read and write locks
+  * one or more readers can hold read locks
+  * only one writer and no one readers or writers can hold write lock
+  * alternative terminology: (reader,writer) ,(shared/exlusive) , (concurrent/exclusive)
+
+{% highlight C %}
+DEFINE_RWLOCK(mr_rwlock);
+
+// Attain read lock
+read_lock(&mr_rwlock);
+/* critical section (read only) ... */
+read_unlock(&mr_rwlock);
+
+// Attain write lock
+write_lock(&mr_rwlock);
+/* critical section (read and write) ... */
+write_unlock(&mr_rwlock);
+{% endhighlight %}
+
+
+  * read locks cant later be tranformed to write locks without first
+    releasing the read lock and then asking for a write lock
+    {% highlight C %}
+    read_lock(&mr_rwlock);
+    
+    // Dead locks will never get a write lock since the read lock will
+    // never get released
+    
+    write_lock(&mr_rwlock); 
+    {% endhighlight %}
+    
+  * reader locks are recursive, same thread can re-obtain same
+    reader locks without deadlock
+    
+  * Thus if only readers in interrupt handlers no need to disable
+    interrupts.
+      * use `read_lock()` instead of `read_lock_irqsave()`
+      
+      * Must use `write_lock_irqsave()` in interrupts
+      
+{% highlight C %}
+// Acquires given lock for reading
+ read_lock()
+
+// Disables local interrupts and acquires given lock for reading
+ read_lock_irq()
+
+/**
+ * Saves the current state of local interrupts, disables local in-
+ * terrupts, and acquires the given lock for reading
+ */
+ read_lock_irqsave()
+
+// Releases given lock for reading
+ read_unlock()
+
+// Releases given lock and enables local interrupts
+ read_unlock_irq()
+
+/**
+ * Releases given lock and restores local interrupts to the
+ * given previous state
+ */
+ read_unlock_ irqrestore()
+
+//Acquires given lock for writing
+ write_lock()
+
+/**
+ * Disables local interrupts and acquires the given lock for
+ * writing
+ */
+ write_lock_irq()
+
+/**
+ * Saves current state of local interrupts, disables local inter-
+ * rupts, and acquires the given lock for writing
+ */
+ write_lock_irqsave()
+
+//Releases given lock
+  write_unlock()
+
+//Releases given lock and enables local interrupts
+  write_unlock_irq()
+
+/**
+ * Releases given lock and restores local interrupts to given
+ * previous state
+ */
+ write_unlock_irqrestore()
+
+/**
+ * Tries to acquire given lock for writing; if unavailable, returns
+ * nonzero
+ */
+ write_trylock()
+
+//Initializes given rwlock_t
+rwlock_init()
+
+{% endhighlight %}
   
-    *
+
+
+
 
 # Semaphores
 
