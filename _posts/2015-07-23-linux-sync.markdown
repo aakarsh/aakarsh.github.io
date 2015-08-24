@@ -351,7 +351,7 @@ spin_is_locked()
 
 * Spin Locks and Bottom Halfs
   * Bottom halfs preempt process contexts
-  * two tasklets of same type dont run concurrently
+  * two tasklets of same type don't run concurrently
   * tasklet never preempts another tasklet on same processor
   * interrupt context can preempt bottom halfs and process contexts
   * Process context should disable bottom half preemption over contended locks
@@ -386,7 +386,7 @@ write_unlock(&mr_rwlock);
 {% endhighlight %}
 
 
-  * read locks cant later be tranformed to write locks without first
+  * read locks cant later be transformed to write locks without first
     releasing the read lock and then asking for a write lock
     {% highlight C %}
     read_lock(&mr_rwlock);
@@ -468,12 +468,134 @@ write_unlock(&mr_rwlock);
 rwlock_init()
 
 {% endhighlight %}
-  
 
-
-
-
+   * Need to think of appropriate priority for writers. Else lots of
+     readers may starve writer.
+     
+   * Spinlocks are on small timescales (nanosceconds?) For larger
+     timescales blocking semaphores are advisable instead.
+   
 # Semaphores
+
+  * For larger timescales where putting process context to sleep is
+    advisable (ms) scale
+    
+  * Sets processor free to execute other code.
+
+  * Should only be obtained in `process context` *cannot* be used in
+    `interrupt context`, `interrupt context` is not schedulable.
+
+  * Cannot hold a `spinlock` while acquiring a semaphore. Since you
+    may sleep and cause a deadlock on the `spinlock` (how is this
+    enforced?)
+
+  * Semaphores don't disable kernel preemption, don't hurt affect
+    scheduling latency as much as spinlocks
+
+  * Counting vs Binary Semaphores
+  
+    * Unlike spinlocks allow *arbitrary number* of *simultaneous* lock
+      holders
+      
+    * `usage count` or `count`  - number of permisable  *simultaneous* lock holders
+    
+    * Binary semaphore/mutex - enforces mutual exclusion - `usage
+      count` is *one*
+         
+    * Counting semaphore - `usage count` greater than one
+
+    * While `count` is greater than `zero` acquiring semaphore
+      succeeds.
+
+    * `asm/semaphore.h`
+    
+    * `struct semaphore` key structure
+    
+    {% highlight C %}
+    struct semaphore name;
+    sema_init(&name, count);
+    // or alternatively for delcaring and inializing a staitc mutex
+    static DECLARE_MUTEX(name);    
+    {% endhighlight %}
+    
+    * `init_MUTEX(sem)` - initialize a dynamically created semaphore
+    * To try acquire use `down_*` methods.
+    * To release use `up_*` methods
+    * `down_interruptible()`
+      * one failure to acquire lock puts calling process in
+        `TASK_INTERRUPTIBLE` and sleep
+      * If `process` receives a `signal` then wake up and fail by
+        returning `-EINTR`
+        
+    * `down()`
+      * place task in `TASK_UNINTERRUPTIBLE`, then sleep
+      * process will not respond to signals
+
+    * prefer `down_interruptible()` over `down()`
+    
+    * `down_trylock()`
+      * acquire semaphore without blocking
+      * if lock held return non-zero
+      
+   {% highlight  C %}
+   /* define and declare a semaphore, named mr_sem, with a count of one */
+   static DECLARE_MUTEX(mr_sem);
+   /* attempt to acquire the semaphore ... */
+   if (down_interruptible(&mr_sem)) {
+   /* signal received, semaphore not acquired ... */
+   }
+   /* critical region ... */
+   /* release the given semaphore */
+   up(&mr_sem);
+   {% endhighlight %}
+
+   * Semaphore Methods
+
+{% highlight C %}
+/**
+ * Initializes the dynamically created semaphore
+ * to the given count
+ */
+sema_init(struct semaphore *, int)
+
+/**
+ * Initializes the dynamically created semaphore
+ * with a count of one
+ */
+init_MUTEX(struct semaphore *)
+
+/**
+ * Initializes the dynamically created semaphore
+ * with a count of zero (so it is initially locked)
+ */
+init_MUTEX_LOCKED(struct semaphore *)
+
+/**
+ * Tries to acquire the given semaphore and
+ * enter interruptible sleep if it is contended
+ */
+down_interruptible (struct semaphore *)
+
+/**
+ * Tries to acquire the given semaphore and
+ * enter uninterruptible sleep if it is contended
+ */
+down(struct semaphore *)
+
+/**
+ * Tries to acquire the given semaphore and
+ * immediately return nonzero if it is contended
+ */
+down_trylock(struct semaphore *)
+
+/**
+ * Releases the given semaphore and wakes a
+ * waiting task, if any
+ */
+up(struct semaphore *)
+
+{% endhighlight %}
+        
 
 # Reader-Writer Semaphores
 
