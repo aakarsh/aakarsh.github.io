@@ -515,7 +515,7 @@ rwlock_init()
     struct semaphore name;
     sema_init(&name, count);
     // or alternatively for delcaring and inializing a staitc mutex
-    static DECLARE_MUTEX(name);    
+    static DECLARE_MUTEX(name);
     {% endhighlight %}
     
     * `init_MUTEX(sem)` - initialize a dynamically created semaphore
@@ -595,11 +595,51 @@ down_trylock(struct semaphore *)
 up(struct semaphore *)
 
 {% endhighlight %}
-        
 
 # Reader-Writer Semaphores
 
+* Similar to `reader-writer` spinlocks
+* `linux/rwsem.h`
+* Static Creation
+  * `static DECLARE_RWSEM(name);`
+* Dynamic Creation
+  * `init_rwsem(struct rw_semaphore *sem)`
+  
+* Define mutual exclusion on writers with usage `count` 1
+* Allow simultaneous reads
+* All readers and writers use uninterruptible sleep
+
+{% highlight C %}
+
+// statically declare  a read only semaphore
+static DECLARE_RWSEM(mr_rwsem);
+
+/* attempt to acquire the semaphore for reading ... */
+down_read(&mr_rwsem);
+
+/* critical region (read only) ... */
+/* release the semaphore */
+up_read(&mr_rwsem);
+
+/* attempt to acquire the semaphore for writing ... */
+down_write(&mr_rwsem);
+/* critical region (read and write) ... */
+/* release the semaphore */
+up_write(&mr_sem);
+
+{% endhighlight %}
+
+* For non-blocking lock-acquisition use `down_read_trylock()` and
+  `down_write_trylock()`
+  * return non-zero if lock *can* be acquired
+  * return zero if lock *cannot* bet acquired
+
+* `downgrade_write()` converts a `write` lock to a read lock
+
+
 # Mutexes
+
+
 
 # Completion Variables
 
