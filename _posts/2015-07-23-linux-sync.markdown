@@ -636,9 +636,69 @@ up_write(&mr_sem);
 
 * `downgrade_write()` converts a `write` lock to a read lock
 
-
 # Mutexes
 
+* `struct mutex`
+*  used to simplify common use case of semaphores
+* Static Definition
+  * `DEFINE_MUTEX(name)`
+* Dynamic Definition
+  * `mutex_init(&mutex)`
+* Locking and Unlocking Mutex
+
+  {% highlight C %}
+  mutex_lock(&mutex);
+  /* critical region ... */
+  mutex_unlock(&mutex);
+  {% endhighlight %}
+  
+* Does not require usage counts
+
+{% highlight C %}
+/**
+ * Locks the given mutex; sleeps if the lock is
+ * unavailable
+ */
+mutex_lock(struct mutex *)
+
+/**
+ * Unlocks the given mutex
+ */
+mutex_unlock(struct mutex *)
+
+/**
+ * Tries to acquire the given mutex; returns one if suc-
+ * cessful and the lock is acquired and zero otherwise
+ */
+mutex_trylock(struct mutex *)
+
+/**
+ * Returns one if the lock is locked and zero otherwise
+ */
+mutex_is_locked (struct mutex *)
+{% endhighlight %}
+
+ * Constrains Imposed on mutex usage
+   * usage count is always `one`
+   * single task holds mutex
+   * only original locker allowed to unlock mutex
+   * recursive locks and unlocks are not allowed.
+   * process cannot exit while holding a mutex
+   * a mutex cannot be acquired by an interrupt handler or bottom half
+   * Constraints checked via `CONFIG_DEBUG_MUTEXES`
+
+ * Usage guidelines
+   * start with mutex use semaphore if constriants not statisfiable
+
+* When to use Spinlocks vs (Semaphore , Mutex) ?
+
+{% highlight C %}
+| Low overhead                        | Spin lock              |
+| Short lock hold time                | Spin lock              |
+| Long lock hold time                 | Mutex is preferred.    |
+| Need to lock from interrupt context | Spin lock is required. |
+| Need to sleep while holding lock    | Mutex is required.     |
+{% endhighlight %}
 
 
 # Completion Variables
