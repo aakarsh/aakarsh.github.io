@@ -753,13 +753,108 @@ complete(struct completion *)
 actually need to syncrhonize with each other # Sequential Locks
 
 # Sequential Locking
-* 
+
+* Simple mechanism reading/writing shared data
+* maintains a sequence counter
+* when sequence counter is odd a write is taking palce
+* check sequence counter is even prior to and after read to be sure no
+  write was underway
+
+{% highlight C %}
+// define a seq lock
+seqlock_t mr_seq_lock = DEFINE_SEQLOCK(mr_seq_lock);
+
+// Create a write lock region
+write_seqlock(&mr_seq_lock);
+/* write lock is obtained... */
+write_sequnlock(&mr_seq_lock);
+
+// Read  path
+unsigned long seq;
+do {
+  seq = read_seqbegin(&mr_seq_lock);
+  /* read data here ... */
+} while (read_seqretry(&mr_seq_lock, seq));
+{% endhighlight %}
+
+* Write lock always succeeds as long as no writers
+* Favor writers over readers
+
+* Ideal cases
+  * Many of readers
+  * Few writers
+  * readers never starve writers
+  * simple data
+
+
+  
+* Ex : `seq_lock` on `jiffies`
+
+{% highlight C %}
+u64 get_jiffies_64(void)
+{
+    unsigned long seq;
+    u64 ret;
+    do {
+       seq = read_seqbegin(&xtime_lock);
+       ret = jiffies_64;
+    } while (read_seqretry(&xtime_lock, seq)); // if unsuccesful read tries again
+    return ret;
+}
+{% endhighlight %}
+
+{% highlight C %}
+// update jiffies in timer interrupt
+write_seqlock(&xtime_lock);
+jiffies_64 += 1;
+write_sequnlock(&xtime_lock);
+{% endhighlight %}
+
 
 # Preemption Disabling
 
+* kernel is preemptive
+* spin locks disable premption for duration held
+* during modification of per-processor data disable preemption to
+  prevent corrupting in flight data
+* `preempt_disable` and `preempt_enable` can be nested
+* methods maintain counts of the number of times preeption is enabled
+  or disabled.
+* If count is `0` kernel is preemptive
+
+
+{% highlight C %}
+/**
+ * Disables kernel preemption by incrementing the preemp-
+ * tion counter
+ */
+preempt_disable()
+
+/**
+ * Decrements the preemption counter and checks and serv-
+ * ices any pending reschedules if the count is now zero
+ */
+preempt_enable()
+
+/**
+ * Enables kernel preemption but does not check for any
+ * pending reschedules
+ */
+preempt_enable_no_resched()
+
+/* Returns the preemption count*/
+preempt_count() 
+{% endhighlight %}
+
+* Alternatively calling `get_cpu()` to obtain an index into
+  perprocessor data will disable kernel preemption.
+  
+* `put_cpu()` will reenable kernel preemption
+
+
 # Ordering and Barriers
 
-  
+
 ### Summary
 
 
