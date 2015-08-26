@@ -703,9 +703,57 @@ mutex_is_locked (struct mutex *)
 
 # Completion Variables
 
+* Event signalling between tasks
+* One task waits for signal, other task signals on completion
+* On completion wake up all sleeping tasks
+* Ex. Completion Variable, wake up parent when child exits
+  * * See `kernel/sched.c` and `kernel/fork.c`
+* Static
+  * `DECLARE_COMPLETION(mr_comp);`
+* Dynamic
+  * `init_completion()`
+* To wait for completion call `wait_for_completion`
+* To signal completion call `complete`
+
+{% highlight C %}
+/**
+ * Initializes the given dynamically created
+ * completion variable
+ */
+
+init_completion(struct completion *)
+
+/**
+ * Waits for the given completion variable
+ * to be signaled
+ */
+wait_for_completion(struct completion *)
+/**
+ * Signals any waiting tasks to wake up
+ */
+complete(struct completion *)
+
+{% endhighlight %}
+
 # BKL: The big kernel lock
 
-# Sequential Locks
+* Spinlock used to ease transition to SMP
+* *global spinlock*
+* Lock dropped on sleep
+* Is a recursive lock: same process multiple acquisition allowed
+* Forbidden new users
+* Transition away from it
+* `lock_kernel` acquires lock
+* `unclock_kernel` releases recursively
+* `kernel_locked` returns 
+  * `0` - lock already held
+  * `non-zero` -lock not being held
+* `linux/smp_lock.h`
+* problem with single lock - difficult to determine which two parties
+actually need to syncrhonize with each other # Sequential Locks
+
+# Sequential Locking
+* 
 
 # Preemption Disabling
 
