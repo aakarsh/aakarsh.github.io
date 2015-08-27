@@ -854,8 +854,46 @@ preempt_count()
 
 # Ordering and Barriers
 
+* Ensuring ordering of memory loads and stores
+* Compiler and Processors like to reorder loads and stores
+* Barriers prevent compiler and processor from reordering instructions
+* `x86` does not do out of order stores
+* Other processors might do out of order stores
+* Reorderings can have dependencies :
+{% highlight C %}
+a = 1
+b = a
+{% endhighlight %}
+  * data dependency between b and a
+  
+* static reordering :  compiler
+  * Reflected in object code
+* dynamic reordering: processor
 
+* `rmb()`
+  * a read memory barrier
+  * loads before the `rmb()` will *never* be reordered to loads
+    *after* the call
+  * `read_barrier_depends()`
+    * read barrier for loads
+    * only for loads where the subsequent load depends on previous load
+    * much quicker on some architectures
+    * on some architectures transforms to `noop`
+    
+* `wmb()`
+  * write barrier
+  * stores before the `wmb()` will *never* be reordered with stores
+    *after* the call
+  * `x86` does not reorder stores
+  
+* `mb()`
+  * read/write barrier
+  * (loads and stores) before the `wmb()` will *never* be reordered
+    with (loads and stores) *after* the call
+
+* `smp_rmb` , `smp_wmb` and `smp_read_barrier_depends`
+  *   
+ 
 ### Summary
-
 
 ---
