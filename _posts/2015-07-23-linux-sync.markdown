@@ -892,7 +892,10 @@ b = a
     with (loads and stores) *after* the call
 
 * `smp_rmb` , `smp_wmb` and `smp_read_barrier_depends`
-  *   
+  * turn memory barrier to compiler barrier on smp
+  * compiler barrires are nearly free - only preventing static rearrangement
+  
+
  
 ### Summary
 
