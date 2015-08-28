@@ -9,6 +9,336 @@ Just a small collection of notes on virtual memory management of
 running processes in the Kernel. The underlying reference for which is
 the Linux Kernel Development book by Robert Love.
 
+* Processs Address Space:
+  * illusion of sole access to memory to process
+  * illusion of greater memory than physcially available
+
+* Address Space
+  * processes given *flat* 32-bit or 64-bit address space
+  * memory addresses are process specific
+  * processes can optionally share address space via threads
+  * memory addresses refer to bytes in process address space
+  * process only allowd access `08048000-0804c000` (on 32-bit)
+  
+* Memory Areas
+ * A process address space divided into memory areas
+ * `text`
+   * memory map of executable file's code
+   
+ * `data`
+   * executable file's  initialized *data section*
+ * `bss section`
+   * a memory map of *zero page*
+   * contains uninitialized global variables
+   * stands for block started by symbol
+   
+ * `stack`
+   * process user space stack
+   * zero'ed pages
+   
+ * `text`,`data`, `bss` sections for each shared libarary
+ * `memory mapped files`
+ * `shared memory segments`
+ * `anonymous mappings`
+   * via `malloc()` 
+   
+* Memory Descriptor
+  * kernel representation of process address space
+  * `mm_users`
+    * number of users of this process address space
+  * `mm_count`
+    * primary reference counter for `mm_struct`
+  * `mmap` and `mm_rb`
+    * stores linked list and rb tree of memory areas
+    * `rb tree` faster searches `O(log(n))`
+    * `mmap` ease traversal of all 
+  * all system wide `mm_struct` on `mmlist`
+    * doubly linked list
+  * `init_mm`
+    * first element of the `mmlist`
+    * the map of the init process
+
+  
+{% highlight C %}
+struct mm_struct {
+	struct vm_area_struct *mmap;		/* list of VMAs */
+	struct rb_root mm_rb;
+	u32 vmacache_seqnum;                   /* per-thread vmacache */
+#ifdef CONFIG_MMU
+	unsigned long (*get_unmapped_area) (struct file *filp,
+				unsigned long addr, unsigned long len,
+				unsigned long pgoff, unsigned long flags);
+#endif
+	unsigned long mmap_base;		/* base of mmap area */
+	unsigned long mmap_legacy_base;         /* base of mmap area in bottom-up allocations */
+	unsigned long task_size;		/* size of task vm space */
+	unsigned long highest_vm_end;		/* highest vma end address */
+	pgd_t * pgd;
+	atomic_t mm_users;			/* How many users with user space? */
+	atomic_t mm_count;			/* How many references to "struct mm_struct" (users count as 1) */
+	atomic_long_t nr_ptes;			/* Page table pages */
+	int map_count;				/* number of VMAs */
+
+	spinlock_t page_table_lock;		/* Protects page tables and some counters */
+	struct rw_semaphore mmap_sem;
+
+	struct list_head mmlist;		/* List of maybe swapped mm's.	These are globally strung
+						 * together off init_mm.mmlist, and are protected
+						 * by mmlist_lock
+						 */
+
+
+	unsigned long hiwater_rss;	/* High-watermark of RSS usage */
+	unsigned long hiwater_vm;	/* High-water virtual memory usage */
+
+	unsigned long total_vm;		/* Total pages mapped */
+	unsigned long locked_vm;	/* Pages that have PG_mlocked set */
+	unsigned long pinned_vm;	/* Refcount permanently increased */
+	unsigned long shared_vm;	/* Shared pages (files) */
+	unsigned long exec_vm;		/* VM_EXEC & ~VM_WRITE */
+	unsigned long stack_vm;		/* VM_GROWSUP/DOWN */
+	unsigned long def_flags;
+	unsigned long start_code, end_code, start_data, end_data;
+	unsigned long start_brk, brk, start_stack;
+	unsigned long arg_start, arg_end, env_start, env_end;
+
+	unsigned long saved_auxv[AT_VECTOR_SIZE]; /* for /proc/PID/auxv */
+
+	/*
+	 * Special counters, in some configurations protected by the
+	 * page_table_lock, in other configurations by being atomic.
+	 */
+	struct mm_rss_stat rss_stat;
+
+	struct linux_binfmt *binfmt;
+
+	cpumask_var_t cpu_vm_mask_var;
+    
+    ///.... Some Architecture Specific Stuff
+{% endhighlight %}
+
+
+*  Allocation of Memory Descriptor
+  * associatd with `struct task` defined in `linux/sched.h`
+  * `current->mm`
+    * current tasks memory descriptor
+  * allocated during `fork`
+    * calls `copy_mm()`
+      * `mm_struct` allocated from `mm_cachep` slab cache
+      * inside `allocate_mm`
+
+{% highlight  %}
+  void __init proc_caches_init(void)
+  {
+    ///....
+	mm_cachep = kmem_cache_create("mm_struct",
+			sizeof(struct mm_struct), ARCH_MIN_MMSTRUCT_ALIGN,
+			SLAB_HWCACHE_ALIGN|SLAB_PANIC|SLAB_NOTRACK, NULL);
+	vm_area_cachep = KMEM_CACHE(vm_area_struct, SLAB_PANIC);
+	mmap_init();
+    ///....
+    }
+{% endhighlight %}
+
+
+* If the `CLONE_VM` flag is used then we are creating a thread
+
+{% highlight C %}
+   // Reusing the mem struct  for this new task
+   // incrementing the users
+   
+	if (clone_flags & CLONE_VM) {
+		atomic_inc(&oldmm->mm_users);
+		mm = oldmm;
+		goto good_mm;
+	}
+{% endhighlight %}
+
+* On destruction `kmem_cache_free` used to return freed mem struct to
+  slab cache
+  
+* Kernel Threads
+  * dont use `mm struct`
+  * set `mm` set to `NULL`
+  
+* Memory areas are describe by the nested `struct vm_area_struct`
+
+* Some key fields of `struct vm_area_struct`
+  * `vm_start` and `vm_end`
+     * start and stop regions within vm_mm
+     * `[vm_start , vm_end)` `vm_end` is exclusive (
+* `vm_flags` represent polices
+   * `VM_READ` Pages can be read from
+   * `VM_WRITE` Pages can be written to
+   * `VM_EXEC` Pages can be executed
+   * `VM_SHARED` Pages are shared
+   * See bellow for more flags
+
+{% highlight C %}
+#define VM_NONE		0x00000000
+
+#define VM_READ		0x00000001	/* currently active flags */
+#define VM_WRITE	0x00000002
+#define VM_EXEC		0x00000004
+#define VM_SHARED	0x00000008
+
+/* mprotect() hardcodes VM_MAYREAD >> 4 == VM_READ, and so for r/w/x bits. */
+#define VM_MAYREAD	0x00000010	/* limits for mprotect() etc */
+#define VM_MAYWRITE	0x00000020
+#define VM_MAYEXEC	0x00000040
+#define VM_MAYSHARE	0x00000080
+
+#define VM_GROWSDOWN	0x00000100	/* general info on the segment */
+#define VM_PFNMAP	0x00000400	/* Page-ranges managed without "struct page", just pure PFN */
+#define VM_DENYWRITE	0x00000800	/* ETXTBSY on write attempts.. */
+
+#define VM_LOCKED	0x00002000
+#define VM_IO           0x00004000	/* Memory mapped I/O or similar */
+
+					/* Used by sys_madvise() */
+#define VM_SEQ_READ	0x00008000	/* App will access data sequentially */
+#define VM_RAND_READ	0x00010000	/* App will not benefit from clustered reads */
+
+#define VM_DONTCOPY	0x00020000      /* Do not copy this vma on fork */
+#define VM_DONTEXPAND	0x00040000	/* Cannot expand with mremap() */
+#define VM_ACCOUNT	0x00100000	/* Is a VM accounted object */
+#define VM_NORESERVE	0x00200000	/* should the VM suppress accounting */
+#define VM_HUGETLB	0x00400000	/* Huge TLB Page VM */
+#define VM_NONLINEAR	0x00800000	/* Is non-linear (remap_file_pages) */
+#define VM_ARCH_1	0x01000000	/* Architecture-specific flag */
+#define VM_DONTDUMP	0x04000000	/* Do not include in the core dump */
+
+{% endhighlight %}
+
+
+* `vm_ops` operations table define a table of functions to deal with specific types of vma
+
+{% highlight C %}
+
+/*
+ * These are the virtual MM functions - opening of an area, closing and
+ * unmapping it (needed to keep files on disk up-to-date etc), pointer
+ * to the functions called when a no-page or a wp-page exception occurs. 
+ */
+struct vm_operations_struct {
+	void (*open)(struct vm_area_struct * area);
+	void (*close)(struct vm_area_struct * area);
+	int (*fault)(struct vm_area_struct *vma, struct vm_fault *vmf);
+	void (*map_pages)(struct vm_area_struct *vma, struct vm_fault *vmf);
+
+	/* notification that a previously read-only page is about to become
+	 * writable, if an error is returned it will cause a SIGBUS */
+	int (*page_mkwrite)(struct vm_area_struct *vma, struct vm_fault *vmf);
+
+	/* called by access_process_vm when get_user_pages() fails, typically
+	 * for use by special VMAs that can switch between memory and hardware
+	 */
+	int (*access)(struct vm_area_struct *vma, unsigned long addr,
+		      void *buf, int len, int write);
+
+	/* Called by the /proc/PID/maps code to ask the vma whether it
+	 * has a special name.  Returning non-NULL will also cause this
+	 * vma to be dumped unconditionally. */
+	const char *(*name)(struct vm_area_struct *vma);
+
+#ifdef CONFIG_NUMA
+	/*
+	 * set_policy() op must add a reference to any non-NULL @new mempolicy
+	 * to hold the policy upon return.  Caller should pass NULL @new to
+	 * remove a policy and fall back to surrounding context--i.e. do not
+	 * install a MPOL_DEFAULT policy, nor the task or system default
+	 * mempolicy.
+	 */
+	int (*set_policy)(struct vm_area_struct *vma, struct mempolicy *new);
+
+	/*
+	 * get_policy() op must add reference [mpol_get()] to any policy at
+	 * (vma,addr) marked as MPOL_SHARED.  The shared policy infrastructure
+	 * in mm/mempolicy.c will do this automatically.
+	 * get_policy() must NOT add a ref if the policy at (vma,addr) is not
+	 * marked as MPOL_SHARED. vma policies are protected by the mmap_sem.
+	 * If no [shared/vma] mempolicy exists at the addr, get_policy() op
+	 * must return NULL--i.e., do not "fallback" to task or system default
+	 * policy.
+	 */
+	struct mempolicy *(*get_policy)(struct vm_area_struct *vma,
+					unsigned long addr);
+	int (*migrate)(struct vm_area_struct *vma, const nodemask_t *from,
+		const nodemask_t *to, unsigned long flags);
+#endif
+	/* called by sys_remap_file_pages() to populate non-linear mapping */
+	int (*remap_pages)(struct vm_area_struct *vma, unsigned long addr,
+			   unsigned long size, pgoff_t pgoff);
+};
+{% endhighlight %}
+
+{% highlight C %}
+struct vm_area_struct {
+	/* The first cache line has the info for VMA tree walking. */
+
+	unsigned long vm_start;		/* Our start address within vm_mm. */
+	unsigned long vm_end;		/* The first byte after our end address
+					   within vm_mm. */
+
+	/* linked list of VM areas per task, sorted by address */
+	struct vm_area_struct *vm_next, *vm_prev;
+
+	struct rb_node vm_rb;
+
+	/*
+	 * Largest free memory gap in bytes to the left of this VMA.
+	 * Either between this VMA and vma->vm_prev, or between one of the
+	 * VMAs below us in the VMA rbtree and its ->vm_prev. This helps
+	 * get_unmapped_area find a free area of the right size.
+	 */
+	unsigned long rb_subtree_gap;
+
+	/* Second cache line starts here. */
+
+	struct mm_struct *vm_mm;	/* The address space we belong to. */
+	pgprot_t vm_page_prot;		/* Access permissions of this VMA. */
+	unsigned long vm_flags;		/* Flags, see mm.h. */
+
+	/*
+	 * For areas with an address space and backing store,
+	 * linkage into the address_space->i_mmap interval tree, or
+	 * linkage of vma in the address_space->i_mmap_nonlinear list.
+	 */
+	union {
+		struct {
+			struct rb_node rb;
+			unsigned long rb_subtree_last;
+		} linear;
+		struct list_head nonlinear;
+	} shared;
+
+	/*
+	 * A file's MAP_PRIVATE vma can be in both i_mmap tree and anon_vma
+	 * list, after a COW of one of the file pages.	A MAP_SHARED vma
+	 * can only be in the i_mmap tree.  An anonymous MAP_PRIVATE, stack
+	 * or brk vma (with NULL file) can only be in an anon_vma list.
+	 */
+	struct list_head anon_vma_chain; /* Serialized by mmap_sem &
+					  * page_table_lock */
+	struct anon_vma *anon_vma;	/* Serialized by page_table_lock */
+
+	/* Function pointers to deal with this struct. */
+	const struct vm_operations_struct *vm_ops;
+
+	/* Information about our backing store: */
+	unsigned long vm_pgoff;		/* Offset (within vm_file) in PAGE_SIZE
+					   units, *not* PAGE_CACHE_SIZE */
+	struct file * vm_file;		/* File we map to (can be NULL). */
+	void * vm_private_data;		/* was vm_pte (shared mem) */
+
+#ifndef CONFIG_MMU
+	struct vm_region *vm_region;	/* NOMMU mapping region */
+#endif
+#ifdef CONFIG_NUMA
+	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
+#endif
+};
+{% endhighlight %}
 
 
 
