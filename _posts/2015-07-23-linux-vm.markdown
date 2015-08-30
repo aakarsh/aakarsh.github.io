@@ -82,10 +82,11 @@ struct mm_struct {
 	spinlock_t page_table_lock;		/* Protects page tables and some counters */
 	struct rw_semaphore mmap_sem;
 
-	struct list_head mmlist;		/* List of maybe swapped mm's.	These are globally strung
-						 * together off init_mm.mmlist, and are protected
-						 * by mmlist_lock
-						 */
+   /** List of maybe swapped mm's.	These are globally strung
+	* together off init_mm.mmlist, and are protected
+	* by mmlist_lock
+	*/
+	struct list_head mmlist;	
 
 
 	unsigned long hiwater_rss;	/* High-watermark of RSS usage */
@@ -340,8 +341,20 @@ struct vm_area_struct {
 };
 {% endhighlight %}
 
+* `mmap` and `do_mmap`
+  * Create a new linear address interval
+  * 
 
-
-
-
+* Page tables
+  * virtual addresses split into chunks
+  * each chunk is an offset into  seperate page table
+  * top level page talbe `page global directory` or `pgd` an array of `pgd_t`
+  * second level `page mapping directory ` or  `pmd`
+  * third level `page table entry` or  `pte`  whihc point to physical pags
+  * `pgd` field of memory descriptor points to global directory
+  * `page_table_lock` for traversing page tables
+  * 
+  * `<asm/page.h>` , page tables are architecture specific
+  * `tlb` hardware cache of `virtual-to-physical` mappings of page tables
+  * 
 ---
