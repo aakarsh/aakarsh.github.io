@@ -31,27 +31,62 @@ It can be installed by cloning the above repo into your `.emacs.d/site-isp` and 
      (evil-mode 1)
 ```
 
-#### Motion Commands
-#### 
-#### Variables and Other References
-#### Expressions and Operators
-#### Numeric Operations
-#### Sequence Operations
-#### Set Operations
-#### Dictionary Operations
-#### Control Flow Statements
-#### Functions
+#### Modes and States
 
-### Object Oriented Python
+If you eval the above code you will see a `<N>` in the mode line. This
+reflects the fact that evil mode is running in vim's equivalent of
+normal mode.  To revert from normal vim emulation to emacs use
+`Ctrl-z`. This will put you back into emacs mode you are used
+to. Typing `Ctrl-z` again will take you back into evil's vim normal
+state. Other list of modes include:
 
-#### Classes and Instances
-
-##### Python Classes
-
-### Summary
+       1. `<N>` - Normal state - for most vims commands.
+       2. `<V>` - Visual state - Vim's rich selection sate.
+       3. `<R>  - Replace state
+       4. `<M>` - Motion state
+       5. `<E>` - Emacs state - will be receptive to usual emacs key bindings in the buffer.
 
 
-### Refernces
+Each state has will have its own customization and bindings. Most of
+the bindings can be seen in `evil-maps.el`.
 
+Some of the key maps are
+```emacslisp
+        evil-emacs-state-map 
+        evil-ex-completion-map
+        evil-inner-text-objects-map
+        evil-insert-state-map
+        evil-motion-state-map
+        evil-normal-state-map
+        evil-operator-state-map
+        evil-outer-text-objects-map
+        evil-read-key-map
+        evil-replace-state-map
+        evil-visual-state-map
+        evil-window-map
+```
+
+You can checkout `evil-commands.el` for list of examples of commands
+that have already been defined. As you begin to look at the custom
+macro `evil-define-motion` used while defining motion types you will
+see most of the commands take in a count for the number of times the
+motion needs to be performed. This is a basic implementation of vim's
+numeric parameterization of motion commands [See references][1].
+
+```emacslisp
+;; Simpler way to exit to normal states than pressing <ESC>
+
+(define-key evil-visual-state-map (kbd "C-c") 'evil-normal-state)
+(define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
+
+(define-key evil-motion-state-map (kbd "C-e") nil)
+(define-key evil-visual-state-map (kbd "C-c") 'evil-exit-visual-state)
+
+```
+### Vim Basics
+
+
+### References
+[http://blog.jakubarnold.cz/2014/06/23/evil-mode-how-to-switch-from-vim-to-emacs.html][1]
 
 ---
