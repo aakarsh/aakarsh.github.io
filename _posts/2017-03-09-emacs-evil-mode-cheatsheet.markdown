@@ -52,18 +52,19 @@ the bindings can be seen in `evil-maps.el`.
 
 Some of the key maps are
 ```emacslisp
-        evil-emacs-state-map 
-        evil-ex-completion-map
-        evil-inner-text-objects-map
-        evil-insert-state-map
-        evil-motion-state-map
-        evil-normal-state-map
-        evil-operator-state-map
-        evil-outer-text-objects-map
-        evil-read-key-map
-        evil-replace-state-map
-        evil-visual-state-map
-        evil-window-map
+
+evil-emacs-state-map 
+evil-ex-completion-map
+evil-inner-text-objects-map
+evil-insert-state-map
+evil-motion-state-map
+evil-normal-state-map
+evil-operator-state-map
+evil-outer-text-objects-map
+evil-read-key-map
+evil-replace-state-map
+evil-visual-state-map
+evil-window-map
 ```
 
 You can checkout `evil-commands.el` for list of examples of commands
