@@ -2,7 +2,7 @@
 layout: post
 title: Some notes virtual memory and proceess address spaces (draft)
 category:  linux
-published: true
+published: false
 ---
 
 Just a small collection of notes on virtual memory management of

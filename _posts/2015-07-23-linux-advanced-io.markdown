@@ -2,7 +2,7 @@
 layout: post
 title: Advanded File I/O Linux(draft)
 category:  linux
-published: true
+published: false
 ---
 
 Just a small collection of notes based on the Linux Systems

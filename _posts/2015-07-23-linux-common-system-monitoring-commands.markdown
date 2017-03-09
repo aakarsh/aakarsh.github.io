@@ -2,7 +2,7 @@
 layout: post
 title: A simple reference for common linux system monitoring commands (draft)
 category:  linux
-published: true
+published: false
 ---
 
 Linux comes with many system monitoring commands here we try create a

@@ -2,7 +2,7 @@
 layout: post
 title: Programming Language Reference - EmacsLisp (draft)
 category:  emacs
-published: true
+published: false
 ---
 
 In this post we explore the extension language for the powerful yet

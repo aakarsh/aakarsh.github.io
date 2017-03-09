@@ -1,17 +1,21 @@
----
-layout: post
-title: Programming Language Reference - Python (draft)
-category:  python
-published: false
----
+--- 
+layout: post 
+title: Emacs/Evil-mode: A basic reference to using evil mode in Emacs.  
+category: emacs 
+published: false 
+--- 
 
-This post is part of a series of cheatsheets for to help people get up
-to speed and refresh rusty python skills. Thus the aim of these post
-is to be short and sweet and to jog already pre-existing python
-knowledge with minimum explanations. Acknowledgement to Python in a
-Nutshell for a lot of the source material.
 
-### The Python Language
+This cheatsheet will be used to provide a very basic reference to
+using evil mode , vi emulation layer inside of emacs. For people who
+would want to still have access to base emacs lisp layer while working
+with vim's modal, noun verb editing features. Since evil-mode is
+trying its best to emulate vim, this post might even serve as a basic
+reference to vim's editing features for folks familiar emacs with
+cursory (no pun intendend) curiosity with vim.
+
+
+### Introduction.
 
 #### Lexical Structure
 #### Data Types
