@@ -108,6 +108,9 @@ back one screen full. Where as `Ctrl-U` will move up one half page-full.
 Most motion commands can be given as targets to action commands like copy, paste
 delete. Thus `yCtrl-F` will copy a screen full of text back from the cursor position.
 
+Additionally `z.` , `zt`, `zb` can be used to center and scroll screen
+top and bottom.
+
 
 ##### Line Level Motions:
 
@@ -117,6 +120,23 @@ To operate on current line some useful commands are shown
 above. For example `y^` will copy the line to beginning current
 line. and `y$` will copy it to the end of the current line. `yy`
 will copy the current line. 
+
+
+##### Line forward and backwards
+
+      `{f{char} - forward search line for character, F{char}, t{char},T{char}, ;-repeat forward, ,- repeat back}`
+
+While working within lines it may be convenient to jump forward to a
+character. `2f,` will jump forward to the second comma in a
+line. Previous searches can be repeated forward and backwards using
+comma and semicolons.
+
+
+##### Sentence and Paragraph Motions
+
+`( - sentences back, ) - sentence forward , { - paragraph back , }-paragraph forward`
+
+All sentence and paragraph motions can take in numeric arguments.
 
 ##### Search and Replace:
 
@@ -140,10 +160,26 @@ named `a`. One can then yank from current line to mark using `y'a`.
 Notice the usage of single apostrophe works line wise whereas using
 back-quote will act linewise.
 
+##### Macro recordings
 
+`{q<reg> - record macro into <reg> , @<reg> - run macro in register }`
+
+Much like emacs macros `qa` can start recording a macro into register
+`a`.  After you are done recording press `q` to indicate its end. `@a`
+can then be used to re-run recorded macro. `.` can be used to repeat
+last run commands.
+
+
+
+##### Why bother?
+
+The basic idea is to create as rich of a structured language for
+editing allowing us to instruct the editor at the level of
+intentionality using composable editing abstractions.
 
 
 ### References
-[http://blog.jakubarnold.cz/2014/06/23/evil-mode-how-to-switch-from-vim-to-emacs.html][1]
+
+[1]: http://blog.jakubarnold.cz/2014/06/23/evil-mode-how-to-switch-from-vim-to-emacs.html
 
 ---
