@@ -90,20 +90,28 @@ For people new to vim's philosophy of using here is a quick recap.
 
 #### Motion Commands
 
-##### Character Level Motion : `{h-left,j-down,k-up,l-right}`
+##### Character Level Motion :
+
+      `{h-left,j-down,k-up,l-right}`
 
       Are single character motions actions. All of which can be
       prefixed with numeric arguments. Thus `7j` will move down 7
       lines in normal mode.
 
-##### Screen Level Motions : `{Ctrl-F,Ctrl-f,Ctrl-B,Ctrl-b,Ctrl-U,Ctrl-D}`
+##### Screen Level Motions :
+
+      `{Ctrl-F,Ctrl-f,Ctrl-B,Ctrl-b,Ctrl-U,Ctrl-D}`
+
 
       Motions can also be performed at the page level using `Ctrl-F` will move
       back one screen full. Where as `Ctrl-U` will move up one half page-full.
       Most motion commands can be given as targets to action commands like copy, paste
       delete. Thus `yCtrl-F` will copy a screen full of text back from the cursor position.
 
-##### Line Level Motions: `{0-beginning of line ,^-non blank beginning of line ,$-eol}`
+
+##### Line Level Motions:
+
+      `{0-beginning of line ,^-non blank beginning of line ,$-eol}`
       
      To operate on current line some useful commands are shown
      above. For example `y^` will copy the line to beginning current
