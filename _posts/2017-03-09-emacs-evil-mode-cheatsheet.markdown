@@ -100,7 +100,7 @@ lines in normal mode.
 
 ##### Screen Level Motions :
 
-      `{Ctrl-F,Ctrl-f,Ctrl-B,Ctrl-b,Ctrl-U,Ctrl-D}`
+      `{Ctrl-F,Ctrl-f,Ctrl-B,Ctrl-b,Ctrl-U,Ctrl-D,<n>G-goto line n, gg-first line}`
 
 
 Motions can also be performed at the page level using `Ctrl-F` will move
@@ -117,6 +117,30 @@ To operate on current line some useful commands are shown
 above. For example `y^` will copy the line to beginning current
 line. and `y$` will copy it to the end of the current line. `yy`
 will copy the current line. 
+
+##### Search and Replace:
+
+      `{/ - search forward, ? - search backwards , :%/<pat1>/<pat2>/g}
+
+`/` and `?` allows you to search forward and backwards also allowing
+you to perform actions as you search. So `y?##` will copy text till
+previous heading in markdown and `P` will allow you to paste after
+current cursor position. One can perform search and replace using
+`:%/<pat1>/<pat2>/g` which will replace every occurance of regex
+`<pat1>` with `<pat2>`.
+
+
+##### Marks
+
+      `{m<reg> - store mark in reg, '<reg> - jump to mark in <reg>}`
+
+Much like emacs marks allow one to jump back and forth between a
+history of positions. `ma` for example will set a mark in register
+named `a`. One can then yank from current line to mark using `y'a`.
+Notice the usage of single apostrophe works line wise whereas using
+back-quote will act linewise.
+
+
 
 
 ### References
