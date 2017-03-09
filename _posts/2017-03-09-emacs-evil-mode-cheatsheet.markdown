@@ -2,7 +2,7 @@
 layout: post 
 title: Emacs/Evil-mode - A basic reference to using evil mode in Emacs.  
 category: emacs 
-published: false 
+published: true 
 --- 
 
 
