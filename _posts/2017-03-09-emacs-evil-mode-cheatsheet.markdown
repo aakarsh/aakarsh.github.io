@@ -76,10 +76,8 @@ numeric parameterization of motion commands [See references][1].
 
 ```emacslisp
 ;; Simpler way to exit to normal states than pressing <ESC>
-
 (define-key evil-visual-state-map (kbd "C-c") 'evil-normal-state)
 (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
-
 (define-key evil-motion-state-map (kbd "C-e") nil)
 (define-key evil-visual-state-map (kbd "C-c") 'evil-exit-visual-state)
 
