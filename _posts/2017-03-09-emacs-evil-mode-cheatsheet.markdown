@@ -175,8 +175,13 @@ comma and semicolons.
 All sentence and paragraph motions can take in numeric arguments.
 
 ##### Search and Replace:
-
-      `{/ - search forward, ? - search backwards , :%/<pat1>/<pat2>/g}
+```
+| /                  | search forward            |
+| ?                  | search backwards          |
+| n                  | continue search forward   |
+| N                  | continue search backward  |
+| :%/<pat>/<pat2>/gc | search and replace        |
+```
 
 `/` and `?` allows you to search forward and backwards also allowing
 you to perform actions as you search. So `y?##` will copy text till
@@ -187,8 +192,10 @@ current cursor position. One can perform search and replace using
 
 
 ##### Marks
-
-      `{m<reg> - store mark in reg, '<reg> - jump to mark in <reg>}`
+```
+| m{char}  | store current position in {char} register  |
+| '{char}  | jump to position stored in {char} register |
+```
 
 Much like emacs marks allow one to jump back and forth between a
 history of positions. `ma` for example will set a mark in register
@@ -198,7 +205,10 @@ back-quote will act linewise.
 
 ##### Macro recordings
 
-`{q<reg> - record macro into <reg> , @<reg> - run macro in register }`
+```
+| q{char} | record following commands in {char} register |
+| @{char} | re-run recorded commands from {char} register|
+```
 
 Much like emacs macros `qa` can start recording a macro into register
 `a`.  After you are done recording press `q` to indicate its end. `@a`
