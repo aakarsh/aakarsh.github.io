@@ -150,6 +150,10 @@ lines in normal mode.
 | Ctrl-D  | half page down   |
 | <n>G    | goto line n      |
 | gg      | goto first line  |
+| z.      | center to point  |
+| zz      | center to point  |
+| zt      | center point top |
+| zb      | center bottom    |
 +---------+------------------+
 ```
 
