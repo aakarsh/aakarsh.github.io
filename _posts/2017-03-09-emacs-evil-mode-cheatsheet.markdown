@@ -164,7 +164,13 @@ comma and semicolons.
 
 ##### Sentence and Paragraph Motions
 
-`( - sentences back, ) - sentence forward , { - paragraph back , }-paragraph forward`
+```
+| ( | sentence back      |
+| ) | sentence forward   |
+| { | paragraph forward  |
+| | | paragraph backward |
+
+```
 
 All sentence and paragraph motions can take in numeric arguments.
 
