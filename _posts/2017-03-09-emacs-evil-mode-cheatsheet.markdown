@@ -201,7 +201,6 @@ character. `2f,` will jump forward to the second comma in a
 line. Previous searches can be repeated forward and backwards using
 comma and semicolons.
 
-
 ##### Sentence and Paragraph Motions
 
 ```
@@ -262,11 +261,15 @@ last run commands.
 
 The basic idea is to create as rich of a structured language for
 editing allowing us to instruct the editor at the level of
-intentionality using composable editing abstractions.
+intentionality using composable editing abstractions. To get a more
+visual guide to possibilities of evil mode checkout some of
+[thoughtbot's evil mode/vim videos][youtube-evil] or
+[bailey ling's guide][baiy-ling-evil].
 
 
 ### References
 
 [1]: http://blog.jakubarnold.cz/2014/06/23/evil-mode-how-to-switch-from-vim-to-emacs.html
-
+[youtube-evil]: https://www.youtube.com/watch?v=JWD1Fpdd4Pc
+[baiy-ling-evil]: https://www.youtube.com/watch?v=PeVQwYUxYEg
 ---
