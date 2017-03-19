@@ -237,13 +237,14 @@ Much like emacs marks allow one to jump back and forth between a
 history of positions. `ma` for example will set a mark in register
 named `a`. One can then yank from current line to mark using `y'a`.
 Notice the usage of single apostrophe works line wise whereas using
-back-quote will act linewise.
+back-quote will act line wise.
 
 ##### Macro recordings
 
 ```
 | q{char} | record following commands in {char} register |
 | @{char} | re-run recorded commands from {char} register|
+| .       | re-run last macro                            |
 ```
 
 Much like emacs macros `qa` can start recording a macro into register
