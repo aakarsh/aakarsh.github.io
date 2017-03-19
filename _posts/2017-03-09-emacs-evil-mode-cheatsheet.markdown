@@ -82,6 +82,42 @@ numeric parameterization of motion commands [See references][1].
 (define-key evil-visual-state-map (kbd "C-c") 'evil-exit-visual-state)
 
 ```
+### Additional plugins
+
+While base evil is fairly feature complete I have found the following
+additional plugins to be useful at times.
+
+#### Key chord mode
+
+Key chord mode will make it easier to jump between modes which becomes
+important when we enter the world of modal editing.
+
+```
+(require 'key-chord)
+(key-chord-mode 1)
+
+(require 'key-seq)
+(key-chord-mode 1)
+
+(key-chord-define evil-normal-state-map ",," 'evil-force-normal-state)
+(key-chord-define evil-visual-state-map ",," 'evil-change-to-previous-state)
+(key-chord-define evil-insert-state-map ",," 'evil-normal-state)
+(key-chord-define evil-replace-state-map ",," 'evil-normal-state)
+
+(key-chord-define evil-normal-state-map "jk" 'evil-force-normal-state)
+(key-chord-define evil-visual-state-map "jk" 'evil-change-to-previous-state)
+(key-chord-define evil-insert-state-map "jk" 'evil-normal-state)
+(key-chord-define evil-replace-state-map "jk" 'evil-normal-state)
+
+(key-chord-define evil-normal-state-map "ee" 'evil-emacs-state)
+(key-chord-define evil-insert-state-map "ee" 'evil-emacs-state)
+(key-chord-define evil-emacs-state-map "ee" 'evil-normal-state)
+```
+
+This will allow one to jump back into normal mode using the `jk` keys
+hit in quick succession. Also hitting `ee` keys quickly will allow one
+to exit and leave default emacs mode in the buffer quickly.
+
 ### Vim Basics
 
 For people new to vim's philosophy of using here is a quick recap.
