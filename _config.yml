@@ -5,7 +5,7 @@ permalink:           pretty
 relative_permalinks: false
 
 
-markdown: rdiscount
+markdown: kramdown
 highlighter: true
 permalink: /posts/:title
 rdiscount:
