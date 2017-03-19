@@ -129,7 +129,14 @@ top and bottom.
 
 ##### Line Level Motions:
 
-      `{0-beginning of line ,^-non blank beginning of line ,$-eol}`
+
+```
++---+-----------------------------+
+| 0 | beginning of line           |
+| ^ | beginning of non black line |
+| $ | end of line                 |
++---+-----------------------------+
+```
       
 To operate on current line some useful commands are shown
 above. For example `y^` will copy the line to beginning current
@@ -138,8 +145,16 @@ will copy the current line.
 
 
 ##### Line forward and backwards
+```
+| f{char} | forward search in line for {char}   |
+| F{char} | backward search in line for {char}  |
+| t{char} | forward search till {char} in line  |
+| t{char} | forward search till {char} in line  |
+| T{char} | backward search till {char}in line  |
+| ;       | repeat last search forward          |
+| ,       | repeat last search backward         | 
 
-      `{f{char} - forward search line for character, F{char}, t{char},T{char}, ;-repeat forward, ,- repeat back}`
+```
 
 While working within lines it may be convenient to jump forward to a
 character. `2f,` will jump forward to the second comma in a
