@@ -91,11 +91,12 @@ For people new to vim's philosophy of using here is a quick recap.
 ##### Character Level Motion :
 
 ```
++---+------+
 | h | left |
 | j | down |
 | k | up   |
 | l | right|
-
++---+------+
 ```
 
 Are single character motions actions. All of which can be
@@ -103,8 +104,18 @@ prefixed with numeric arguments. Thus `7j` will move down 7
 lines in normal mode.
 
 ##### Screen Level Motions :
-
-      `{Ctrl-F,Ctrl-f,Ctrl-B,Ctrl-b,Ctrl-U,Ctrl-D,<n>G-goto line n, gg-first line}`
+```
++---------+------------------+
+| Ctrl-F  | back screen      |
+| Ctrl-f  | forward screen   |
+| Ctrl-B  | page down        |
+| Ctrl-b  | page up          |
+| Ctrl-U  | half page up     |
+| Ctrl-D  | half page down   |
+| <n>G    | goto line n      |
+| gg      | goto first line  |
++---------+------------------+
+```
 
 
 Motions can also be performed at the page level using `Ctrl-F` will move
