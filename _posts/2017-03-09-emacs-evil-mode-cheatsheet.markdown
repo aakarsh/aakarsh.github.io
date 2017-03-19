@@ -90,7 +90,13 @@ For people new to vim's philosophy of using here is a quick recap.
 
 ##### Character Level Motion :
 
-      `{h-left,j-down,k-up,l-right}`
+```
+| h | left |
+| j | down |
+| k | up   |
+| l | right|
+
+```
 
 Are single character motions actions. All of which can be
 prefixed with numeric arguments. Thus `7j` will move down 7
