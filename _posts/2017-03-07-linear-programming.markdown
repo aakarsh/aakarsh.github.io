@@ -2,7 +2,7 @@
 layout: post
 title: Linear Programming A Brief Introduction.
 category:  algorithms
-published: true
+published: false
 ---
 
 Many common optimization problems can be reduced to instances of
@@ -21,10 +21,25 @@ polytope will be the last to touch a moving hyper-plane described by
 the objective function.
 
 
-$$ max c_1 x_1 + c_2 x_2 + c_3 x_3 + \cdots + c_n x_n $$
+
+$$ \text{ max } c_1 x_1 + c_2 x_2 + c_3 x_3 + \cdots + c_n x_n $$
+
 $$ a_{i1} x_1 + a_{i2} x_2 + \cdots + a_{in} x_n \leq b_i  \text{ for } i \in I $$
+
 $$ a_{i1} x_1 + a_{i2} x_2 + \cdots + a_{in} x_n  = b_i   \text{ for } i \in E $$
-$$ x_i \geq  \text{ for } j \in N $$
+
+$$ x_i \geq 0  \text{ for } j \in N $$
+
+
+For any defined maximizing set of linear inequalities there exists a
+corresponding dual , linear program.
+
+$$ \text{ min } b_1 y_1 + b_2 y_2 + \cdots + b_m y_m $$
+
+$$ a_{1j} y_1 + a_{2j} y_2 + \cdots + a_{nj} y_m \leq c_j  \text{ for } j \in N $$
+$$ a_{1j} y_1 + a_{2j} y_2 + \cdots + a_{nj} y_m  = c_j  \text{ for } j \notin N $$
+
+$$ y_i \ geq 0 $$
 
 
 ---
