@@ -264,7 +264,9 @@ editing allowing us to instruct the editor at the level of
 intentionality using composable editing abstractions. To get a more
 visual guide to possibilities of evil mode checkout some of
 [thoughtbot's evil mode/vim videos][youtube-evil] or
-[bailey ling's guide][baiy-ling-evil].
+[bailey ling's guide][baiy-ling-evil]. Another extremely useful
+resource is the vim reference manual which seems to be written
+in a very deliberate manner [here][vim-reference].  
 
 
 ### References
@@ -272,4 +274,5 @@ visual guide to possibilities of evil mode checkout some of
 [1]: http://blog.jakubarnold.cz/2014/06/23/evil-mode-how-to-switch-from-vim-to-emacs.html
 [youtube-evil]: https://www.youtube.com/watch?v=JWD1Fpdd4Pc
 [baiy-ling-evil]: https://www.youtube.com/watch?v=PeVQwYUxYEg
+[vim-reference]: http://vimdoc.sourceforge.net/vimum.html
 ---
