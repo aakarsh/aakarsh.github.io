@@ -263,10 +263,10 @@ The basic idea is to create as rich of a structured language for
 editing allowing us to instruct the editor at the level of
 intentionality using composable editing abstractions. To get a more
 visual guide to possibilities of evil mode checkout some of
-[thoughtbot's evil mode/vim videos][youtube-evil] or
-[bailey ling's guide][baiy-ling-evil]. Another extremely useful
-resource is the vim reference manual which seems to be written
-in a very deliberate manner [here][vim-reference].  
+[thoughtbot's evil mode/vim videos][youtube-evil] or [bailey ling's
+guide][baiy-ling-evil]. Another extremely useful resource is the vim
+reference manual which seems to be written in a very deliberate manner
+by Bram Moolenaar [available here][vim-reference].
 
 
 ### References
