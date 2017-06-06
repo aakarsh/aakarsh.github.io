@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Some notes on synchronization in the Linux Kernel 
+title: Notes on synchronization in the Linux Kernel 
 category:  linux
 published: true
 ---

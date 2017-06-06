@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Some notes on memory management in the Linux Kernel
+title: Notes on memory management in the Linux Kernel
 category:  linux
 published: true
 ---

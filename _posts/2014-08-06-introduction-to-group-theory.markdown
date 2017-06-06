@@ -2,6 +2,7 @@
 layout: post
 title: Some notes on introduction to group theory 
 category: posts
+published: false
 ---
 
 Some notes on group theory. Proof sketches, interesting

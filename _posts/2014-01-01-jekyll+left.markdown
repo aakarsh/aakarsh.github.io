@@ -2,6 +2,7 @@
 layout: post
 title: Jekyll + Left  
 category: posts
+published: false
 ---
 
 Trying out jekyll and Left for a simple place to keep development
