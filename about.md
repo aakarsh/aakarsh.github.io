@@ -10,17 +10,14 @@ complete innocence that we receive everything from the moment of our
 birth. Although so often the object of our contempt and of our private
 fears, it is always in us. It alone can unite humility with boldness
 so as to allow us to penetrate to the heart of things, or allow things
-to enter us and taken possession of us.
-<p class="message"> ~Alexander Grothendieck</p>
+to enter us and taken possession of us. ~Alexander Grothendieck
 </p>
-
 
 While I myself cannot claim to possess any special knowledge of any
 topics. I do find this idea of openness and exploration and above all
 innocence to be highly appealing. I hope this place to be where I can
 write down, summarize, synthesize topics as I learn them. Always
-trying to regain or retain a sense of openness that has been mentioned
-previously.
+trying to regain and perhaps retain a sense of openness to new ideas.
 
 If you are looking for a place where I generally leave my code then
 that can be found at [GitHub](https://github.com/aakarsh).
